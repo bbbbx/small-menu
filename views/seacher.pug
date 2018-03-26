@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  div(class="container" style="margin-top: 75px")
+    div(class="card-columns")
+      - for (var i = 0; i < data.result.data.length; i++)
+        div(class="card")
+          img(class="card-img-top" src=data.result.data[i].albums[0] alt="Card image cap")
+          div(class="card-body")
+            a(href=`/detail/${data.result.data[i].id}`)
+              h5(class="card-title") #{data.result.data[i].title}
+            p(class="card-text") #{ data.result.data[i].imtro }
+
+      //- div(id="accordion")
+      //-   div(class="card")
+      //-     div(class="card-header" id=`heading${i}`)
+      //-       h5(class="mb-0")
+      //-         button(class="btn btn-link" data-toggle="collapse" data-target=`#collapse${i}` aria-expanded="true" aria-controls=`collapse${i}`) #{data.result.data[i].title}
+      //-     div(id=`collapse${i}` class="collapse show" aria-labelledby=`heading${i}` data-parent="#accordion")
+      //-       div(class="card-body")
+      //-         img(src=data.result.data[i].albums[0])
+      //-         p #{ data.result.data[i].imtro }

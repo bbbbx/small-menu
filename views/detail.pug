@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  div(class="container" style="margin-top: 75px;")
+    hr
+    div(class="row")
+      div(class="col-4")
+        div(class="card")
+          img(class="card-image-top" src=result.albums[0])
+          div(class="card-body")
+            h5(class="card-title") #{ result.title }
+      div(class="col-8")
+        h6 原料：#{ result.ingredients }
+        h6 佐料：#{ result.burden }
+        p #{ result.imtro }
+        - for (var i = 0; i < result.tags.split(';').length; i++)
+          span(class="badge badge-pill badge-info") #{ result.tags.split(';')[i] }
+          | &nbsp;
+    hr
+    div(class="row")
+      div(class="col-4")
+        div(id="list-example" class="list-group")
+          - for (var j = 0; j < result.steps.length; j++)
+            a(class="list-group-item list-group-item-action" href=`#list-item-${j}`) #{ result.steps[j].step }
+      div(class="col-8")
+        div(data-spy="scroll" data-target="#list-example" data-offset="2" style="overflow: auto; position: relative; height: 800px")
+          - for (var k = 0; k < result.steps.length; k++)
+            h4(id=`list-item-${k}`) #{ result.steps[k].step }
+            img(src=result.steps[k].img)
+            hr

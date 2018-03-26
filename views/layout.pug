@@ -1,0 +1,187 @@
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, shrink-to-fit=no")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous")
+    script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous")
+    script(src="https://unpkg.com/sweetalert/dist/sweetalert.min.js")
+    title 小当家
+  body
+    nav(class="navbar navbar-expand-lg navbar-light bg-light fixed-top" role="navigation")
+      div(class="container")
+        div(class="navbar-header")
+          button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
+            span(class="navbar-toggler-icon")
+          a(class="navbar-brand" href="/")
+            img(width=42 src="/logo.svg" alt="brand")
+            | 小当家
+        div(class="navbar-collapse collapse in" id="navbarSupportedContent" aria-expanded="true")
+          ul(class="navbar-nav mr-auto")
+            li(class="nav-item mr-auto")
+              a(class="nav-link" href="/") 首页
+                span(class="sr-only") (current)
+            li(class="nav-item dropdown")
+              a(class="nav-link dropdown-toggle" href="#" id="cuisine" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 菜系
+              div(class="dropdown-menu" aria-labelledby="cuisine")
+                a(class="dropdown-item" href="#") 川菜
+                a(class="dropdown-item" href="#") 粤菜
+                a(class="dropdown-item" href="#") 湘菜
+                a(class="dropdown-item" href="#") 鲁菜
+                a(class="dropdown-item" href="#") 京菜
+                a(class="dropdown-item" href="#") 东北菜
+                a(class="dropdown-item" href="#") 西餐
+                a(class="dropdown-item" href="#") 日本料理
+                a(class="dropdown-item" href="#") 韩国料理
+                a(class="dropdown-item" href="#") 闽菜
+                a(class="dropdown-item" href="#") 浙菜
+                a(class="dropdown-item" href="#") 苏菜
+                a(class="dropdown-item" href="#") 徽菜
+                a(class="dropdown-item" href="#") 豫菜
+                a(class="dropdown-item" href="#") 晋菜
+                a(class="dropdown-item" href="#") 徽菜
+                a(class="dropdown-item" href="#") 赣菜
+                a(class="dropdown-item" href="#") 湖北菜
+                a(class="dropdown-item" href="#") 清真菜
+                a(class="dropdown-item" href="#") 云南菜
+                a(class="dropdown-item" href="#") 贵州菜
+                a(class="dropdown-item" href="#") 新疆菜
+                a(class="dropdown-item" href="#") 淮扬菜
+                a(class="dropdown-item" href="#") 潮州菜
+                a(class="dropdown-item" href="#") 客家菜
+                a(class="dropdown-item" href="#") 香港美食
+                a(class="dropdown-item" href="#") 台湾菜
+                a(class="dropdown-item" href="#") 泰国菜
+                a(class="dropdown-item" href="#") 意大利菜
+                a(class="dropdown-item" href="#") 法国菜
+                a(class="dropdown-item" href="#") 东南亚菜
+                a(class="dropdown-item" href="#") 印度菜
+            li(class="nav-item dropdown")
+              a(class="nav-link dropdown-toggle" href="#" id="function" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 功效
+              div(class="dropdown-menu" aria-labelledby="function")
+                a(class="dropdown-item" href="#") 清肺
+                a(class="dropdown-item" href="#") 护肝
+                a(class="dropdown-item" href="#") 减肥
+                a(class="dropdown-item" href="#") 养胃
+                a(class="dropdown-item" href="#") 丰胸
+                a(class="dropdown-item" href="#") 排毒
+                a(class="dropdown-item" href="#") 补血
+                a(class="dropdown-item" href="#") 补钙
+                a(class="dropdown-item" href="#") 提高免疫力
+                a(class="dropdown-item" href="#") 美容
+                a(class="dropdown-item" href="#") 补肾
+                a(class="dropdown-item" href="#") 润肺
+                a(class="dropdown-item" href="#") 滋阴
+                a(class="dropdown-item" href="#") 抗衰老
+                a(class="dropdown-item" href="#") 降血压
+                a(class="dropdown-item" href="#") 祛痘
+                a(class="dropdown-item" href="#") 防癌
+                a(class="dropdown-item" href="#") 增肥
+                a(class="dropdown-item" href="#") 明目
+                a(class="dropdown-item" href="#") 防辐射
+                a(class="dropdown-item" href="#") 降血脂
+                a(class="dropdown-item" href="#") 健脑益智
+                a(class="dropdown-item" href="#") 增高
+                a(class="dropdown-item" href="#") 壮阳
+                a(class="dropdown-item" href="#") 乌发
+                a(class="dropdown-item" href="#") 调经
+                a(class="dropdown-item" href="#") 助睡眠
+                a(class="dropdown-item" href="#") 健脾胃
+                a(class="dropdown-item" href="#") 润肠通便
+            li(class="nav-item dropdown")
+              a(class="nav-link dropdown-toggle" href="#" id="scene" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 场景
+              div(class="dropdown-menu" aria-labelledby="scene")
+                a(class="dropdown-item" href="#") 早餐
+                a(class="dropdown-item" href="#") 午餐
+                a(class="dropdown-item" href="#") 下午茶
+                a(class="dropdown-item" href="#") 晚餐
+                a(class="dropdown-item" href="#") 夜宵
+                a(class="dropdown-item" href="#") 踏青
+                a(class="dropdown-item" href="#") 10分钟内
+                a(class="dropdown-item" href="#") 10-20分钟
+                a(class="dropdown-item" href="#") 半小时-1小时
+            li(class="nav-item dropdown")
+              a(class="nav-link dropdown-toggle" href="#" id="dish" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 菜肴
+              div(class="dropdown-menu" aria-labelledby="dish")
+                a(class="dropdown-item" href="#") 私房菜
+                a(class="dropdown-item" href="#") 下酒菜
+                a(class="dropdown-item" href="#") 小吃
+                a(class="dropdown-item" href="#") 海鲜
+            li(class="nav-item dropdown")
+              a(class="nav-link dropdown-toggle" href="#" id="staple-food" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 主食
+              div(class="dropdown-menu" aria-labelledby="staple-food")
+                a(class="dropdown-item" href="#") 饭
+                a(class="dropdown-item" href="#") 粥
+                a(class="dropdown-item" href="#") 面
+                a(class="dropdown-item" href="#") 粉
+                a(class="dropdown-item" href="#") 饼
+                a(class="dropdown-item" href="#") 饺子
+                a(class="dropdown-item" href="#") 馒头
+                a(class="dropdown-item" href="#") 包子
+                a(class="dropdown-item" href="#") 卷子
+            li(class="nav-item dropdown")
+              a(class="nav-link dropdown-toggle" href="#" id="audience" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 人群
+              div(class="dropdown-menu" aria-labelledby="audience")
+                a(class="dropdown-item" href="#") 孕妇
+                a(class="dropdown-item" href="#") 儿童
+                a(class="dropdown-item" href="#") 幼儿
+                a(class="dropdown-item" href="#") 老年人
+                a(class="dropdown-item" href="#") 考生
+                a(class="dropdown-item" href="#") 产妇
+                a(class="dropdown-item" href="#") 运动员
+                a(class="dropdown-item" href="#") 白领
+                a(class="dropdown-item" href="#") 司机
+            li(class="nav-item dropdown")
+              a(class="nav-link dropdown-toggle" href="#" id="solar-terms" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 节气
+              div(class="dropdown-menu" aria-labelledby="solar-terms")
+                a(class="dropdown-item" href="#") 立春
+                a(class="dropdown-item" href="#") 雨水
+                a(class="dropdown-item" href="#") 惊蛰
+                a(class="dropdown-item" href="#") 春分
+                a(class="dropdown-item" href="#") 清明
+                a(class="dropdown-item" href="#") 谷雨
+                a(class="dropdown-item" href="#") 立夏
+                a(class="dropdown-item" href="#") 小满
+                a(class="dropdown-item" href="#") 芒种
+                a(class="dropdown-item" href="#") 夏至
+                a(class="dropdown-item" href="#") 小暑
+                a(class="dropdown-item" href="#") 大暑
+                a(class="dropdown-item" href="#") 立秋
+                a(class="dropdown-item" href="#") 处暑
+                a(class="dropdown-item" href="#") 白露
+                a(class="dropdown-item" href="#") 秋分
+                a(class="dropdown-item" href="#") 寒露
+                a(class="dropdown-item" href="#") 霜降
+                a(class="dropdown-item" href="#") 立冬
+                a(class="dropdown-item" href="#") 小雪
+                a(class="dropdown-item" href="#") 大雪
+                a(class="dropdown-item" href="#") 冬至
+                a(class="dropdown-item" href="#") 小寒
+                a(class="dropdown-item" href="#") 大寒
+          ul(class="navbar-nav mr-auto")
+            if username
+              li(class="nav-item mr-auto") 
+                a(class="btn btn-outline-success" href="/user") 个人中心
+              | &nbsp;
+              li(class="nav-item mr-auto") 
+                a(class="btn btn-outline-danger" href="/logout") 退出登录
+            else 
+              li(class="nav-item mr-auto") 
+                a(class="btn btn-outline-success" href="/login") 登录
+                | &nbsp;
+              li(class="navbar-nav mr-auto") 
+                a(class="btn btn-outline-success" href="/register") 注册
+          form(class="form-inline" action="/search" method="get")
+            input(class="form-control mr-sm-2"  type="search" placeholder="请输入要搜索的菜名" aria-label="Search" name="foodName" required)
+            button(class="btn btn-outline-success my-2 my-sm-0" type="submit") 搜索
+
+    block content
+
+    div Icons made by 
+      a(href="http://www.freepik.com" title="Freepik") Freepik
+      | from 
+      a(href="https://www.flaticon.com/" title="Flaticon") www.flaticon.com
+      | is licensed by 
+      a(href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank") CC 3.0 BY
