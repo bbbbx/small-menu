@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport');
+const setUpPassport = require('./setuppassport');
 
 const index = require('./routes/index');
 const search = require('./routes/search');
@@ -27,12 +29,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-	secret: 'TKRv0IJs=HYqrvagQ#&!F!%V]Ww/4KiVs$s,<<MX',
-	resave: false,
-	saveUninitialized: false
+	secret: 'a5717a649d346ed0c51be68888c130cd',
+	resave: true,
+	saveUninitialized: true
 }));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+setUpPassport();
 
+app.use(function(req, res, next) {	
+	res.locals.currentUser = req.user;
+	res.locals.errors = req.flash('errors');
+	next();
+});
 
 app.use('/', index);
 app.use('/search', search);
