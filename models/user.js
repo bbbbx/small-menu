@@ -16,5 +16,10 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING, 
 			allowNull: false 
 		},
+		avatar: {
+			type: DataTypes.STRING(400),
+			allowNull: false,
+			defaultValue: 'http://ohjn9v8nd.bkt.clouddn.com/boy.png'
+		}
 	});
 };

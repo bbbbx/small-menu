@@ -8,26 +8,34 @@ const saltRounds = 10;
 
 router.get('/', function(req, res) {
 	const captcha = svgCaptcha.create();
+	req.session.captcha = captcha.text;
 	res.render('register', {captcha});
 });
 
 router.post('/', function(req, res) {
-	const CAPTCHA = Math.floor(100000 + Math.random() * 899999);
-	const { email, username, password, passwordConfirm } = req.body;
+	const { email, username, password, passwordConfirm, captcha } = req.body;
 
-	if (password !== passwordConfirm) {
-		req.flash('errors', '两次密码不一致');
+	if (captcha !== req.session.captcha) {
+		req.flash('error', '验证码错误！注意区分大小写');
 		res.redirect('/register');
 	}
+	if (password !== passwordConfirm) {
+		req.flash('error', '两次密码不一致');
+		res.redirect('/register');
+	}
+
+	const CAPTCHA = Math.floor(100000 + Math.random() * 899999);
 
 	User.findOne({where: { username }})
 		.then(user => {
 			if (user) {
-				req.flash('errors', '用户已存在');
+				req.flash('error', '用户已存在');
 				res.redirect('/register');
 			} else {
 				bcrypt.hash(password, saltRounds, (err, hash) => {
-					User.create({ email, username, password: hash })
+					const avatar = Math.random() > 0.5 ? 'http://ohjn9v8nd.bkt.clouddn.com/boy.png': 'http://ohjn9v8nd.bkt.clouddn.com/girl.png';
+
+					User.create({ email, username, password: hash, avatar })
 						.then(() => {
 							User.find({ where: { username }})
 								.then(user => {
@@ -49,8 +57,8 @@ router.post('/', function(req, res) {
 									};
 									
 									transporter.sendMail(mailOption);
-									res.locals.currentUser = user.dataValues;
-									console.log(res.locals.currentUser);
+									// [TODO] 验证用户
+									req.session.user = user.dataValues;
 									res.redirect('/');
 								});
 						});

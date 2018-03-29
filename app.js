@@ -16,6 +16,7 @@ const detail = require('./routes/detail');
 const login = require('./routes/login');
 const logout = require('./routes/logout');
 const register = require('./routes/register');
+const user = require('./routes/user');
 
 let app = express();
 
@@ -30,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
 	secret: 'a5717a649d346ed0c51be68888c130cd',
-	resave: true,
+	resave: false,
 	saveUninitialized: true
 }));
 app.use(flash());
@@ -40,7 +41,7 @@ setUpPassport();
 
 app.use(function(req, res, next) {	
 	res.locals.currentUser = req.user;
-	res.locals.errors = req.flash('errors');
+	res.locals.errors = req.flash('error');
 	next();
 });
 
@@ -50,6 +51,7 @@ app.use('/detail', detail);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/register', register);
+app.use('/user', user);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
