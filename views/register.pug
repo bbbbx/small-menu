@@ -4,13 +4,15 @@ block content
   div(class='container' style="margin-top: 100px")
     - for (var x = 0; x < errors.length; x++) 
       div(class="alert alert-danger" role="alert") #{ errors[x] }
+    - for (var j = 0; j < infos.length; j++) 
+      div(class="alert alert-danger" role="alert") #{ infos[j] }
     div(class="row")  
       div(class="col")
       div(class="col")
         form(action="/register", method="post" id="register")
           h5 注册
           input(type="email" class="form-control" id="email" name="email" required autofocus="autofocus" placeholder="E-mail")
-          input(type="text" class="form-control" id="username" name="username" required placeholder="用户名")
+          input(type="text" class="form-control" id="account" name="account" required placeholder="账号")
           input(type="password" class="form-control" id="password" name="password" required placeholder="密码")
           input(type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" required placeholder="确认密码")
           input(type="text" class="form-control" id="captcha" name="captcha" required placeholder="验证码(区分大小写)")

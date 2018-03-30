@@ -17,6 +17,7 @@ const login = require('./routes/login');
 const logout = require('./routes/logout');
 const register = require('./routes/register');
 const user = require('./routes/user');
+const password = require('./routes/password');
 
 let app = express();
 
@@ -42,6 +43,7 @@ setUpPassport();
 app.use(function(req, res, next) {	
 	res.locals.currentUser = req.user;
 	res.locals.errors = req.flash('error');
+	res.locals.infos = req.flash('info');
 	next();
 });
 
@@ -52,6 +54,7 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/register', register);
 app.use('/user', user);
+app.use('/password', password);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

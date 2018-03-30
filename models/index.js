@@ -17,9 +17,16 @@ let sequelize = new Sequelize(
 	});
 
 const User = sequelize.import('./user');
+const Captcha = sequelize.import('./captcha');
+
+User.hasMany(User, { foreignKey: 'following', targetKey: 'id'});
+User.hasMany(User, { foreignKey: 'followed', targetKey: 'id'});
+
+Captcha.belongsTo(User);
 
 sequelize.sync();
 
 module.exports = {
-	User
+	User,
+	Captcha
 };

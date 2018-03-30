@@ -8,6 +8,10 @@ module.exports = function(sequelize, DataTypes) {
 				notEmpty: true,
 			}
 		},
+		account: {
+			type: DataTypes.STRING, 
+			allowNull: false 
+		},
 		username: { 
 			type: DataTypes.STRING, 
 			allowNull: false 
@@ -16,10 +20,19 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING, 
 			allowNull: false 
 		},
+		gender: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
 		avatar: {
 			type: DataTypes.STRING(400),
 			allowNull: false,
 			defaultValue: 'http://ohjn9v8nd.bkt.clouddn.com/boy.png'
+		},
+		confirmed: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: false
 		}
 	});
 };

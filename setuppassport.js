@@ -5,7 +5,7 @@ const { User } = require('./models/index');
 
 passport.use('login', new LocalStrategy(
 	function(username, password, done) {
-		User.findOne({ where: { username }})
+		User.findOne({ where: { account: username }})
 			.then(user => {
 				if (!user) {
 					return done(null, false, { message: '用户不存在!'});
