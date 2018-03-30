@@ -3,7 +3,8 @@ const router = express.Router();
 
 router.get('/', function(req, res) {
 	req.logout();
-	req.session.destroy();
+	delete req.session.user;
+	req.flash('info', '退出成功');
 	res.redirect('/');
 });
 

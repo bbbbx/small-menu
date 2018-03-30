@@ -58,7 +58,7 @@ router.post('/', function(req, res) {
 										from: '"小当家" <venus_box@163.com>',
 										to: email,
 										subject: '小当家注册验证',
-										html: `<p>${user.dataValues.username}：</p><p>&nbsp;&nbsp;请点击以下链接完成邮箱验证：</p><p><a href="http://smallmenu.venusworld.cn/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}">http://smallmenu.venusworld.cn/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}</a></p><p>如果以上链接无法点击，请将上面的地址复制到你的浏览器地址栏。</p>`
+										html: `<p>${user.dataValues.username}：</p><p>&nbsp;&nbsp;请点击以下链接完成邮箱验证：</p><p><a href="http://localhost:3000/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}">http://localhost:3000/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}</a></p><p>如果以上链接无法点击，请将上面的地址复制到你的浏览器地址栏。</p>`
 									};
 									
 									const timestamp = new Date().getTime();
@@ -72,6 +72,7 @@ router.post('/', function(req, res) {
 									transporter.sendMail(mailOption);
 									// [TODO] 验证用户
 									req.session.user = user.dataValues;
+									req.flash('info', '注册成功，请验证邮箱。');
 									res.redirect('/');
 								});
 						});

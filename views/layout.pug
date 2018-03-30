@@ -177,6 +177,12 @@ html(lang="en")
             input(class="form-control mr-sm-2"  type="search" placeholder="请输入要搜索的菜名" aria-label="Search" name="foodName" required)
             button(class="btn btn-outline-success my-2 my-sm-0" type="submit") 搜索
 
+    p(style="height: 100px")
+    - for (var x = 0; x < errors.length; x++) 
+      div(class="alert alert-danger" role="alert") #{ errors[x] }
+    - for (var j = 0; j < infos.length; j++) 
+      div(class="alert alert-success" role="alert") #{ infos[j] }
+
     block content
 
     hr
