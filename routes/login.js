@@ -7,10 +7,13 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', passport.authenticate('login', {
-	successRedirect: '/',
+	// successRedirect: '/',
 	failureRedirect: '/login',
 	failureFlash: true
-}));
+}), function(req, res) {
+	req.flash('info', '登录成功');
+	res.redirect('/');
+});
 
 // router.post('/', function(req, res) {
 // 	const { username, password } = req.body;

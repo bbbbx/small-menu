@@ -8,7 +8,7 @@ html(lang="en")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous")
     script(src="https://unpkg.com/sweetalert/dist/sweetalert.min.js")
-    title 小当家
+    title 小当家——你的私人食谱
   body
     nav(class="navbar navbar-expand-lg navbar-light bg-light fixed-top" role="navigation")
       div(class="container")
@@ -177,18 +177,24 @@ html(lang="en")
             input(class="form-control mr-sm-2"  type="search" placeholder="请输入要搜索的菜名" aria-label="Search" name="foodName" required)
             button(class="btn btn-outline-success my-2 my-sm-0" type="submit") 搜索
 
-    p(style="height: 100px")
+    p(style="height: 80px")
     - for (var x = 0; x < errors.length; x++) 
-      div(class="alert alert-danger" role="alert") #{ errors[x] }
+      div(class="alert alert-danger text-center" role="alert") #{ errors[x] }
     - for (var j = 0; j < infos.length; j++) 
-      div(class="alert alert-success" role="alert") #{ infos[j] }
+      div(class="alert alert-success text-center" role="alert") #{ infos[j] }
 
     block content
 
     hr
-    div(align="center") Icons made by 
-      a(href="http://www.freepik.com" title="Freepik") Freepik 
-      | from 
-      a(href="https://www.flaticon.com/" title="Flaticon") www.flaticon.com 
-      | is licensed by 
-      a(href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank") CC 3.0 BY
+    footer(class="text-center font-weight-light")
+      p Created By &copy; 2018 
+        a(href="http://venusworld.cn") Venus &nbsp;
+        | Open Source On 
+        a(href="https://www.github.com/bbbbx/small-menu") Github 
+        | &nbsp; Enjoy it ~
+      p Icons made by 
+        a(href="http://www.freepik.com" title="Freepik") Freepik 
+        | from 
+        a(href="https://www.flaticon.com/" title="Flaticon") www.flaticon.com 
+        | is licensed by 
+        a(href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank") CC 3.0 BY

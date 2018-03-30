@@ -1,14 +1,14 @@
 module.exports = function(sequelize, DataTypes) {
 	return sequelize.define('captcha', {
-		'timestamp': {
+		timestamp: {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
-		'used': {
+		used: {
 			type: DataTypes.BOOLEAN,
 			allowNull: false
 		},
-		'value': {
+		value: {
 			type: DataTypes.STRING,
 			allowNull: false
 		}

@@ -16,17 +16,28 @@ let sequelize = new Sequelize(
 		operatorsAliases: false
 	});
 
+const Menu = sequelize.import('./menu');
 const User = sequelize.import('./user');
 const Captcha = sequelize.import('./captcha');
+const Comment = sequelize.import('./comment');
 
-User.hasMany(User, { foreignKey: 'following', targetKey: 'id'});
-User.hasMany(User, { foreignKey: 'followed', targetKey: 'id'});
+
+User.hasMany(User, { as: 'Following', foreignKey: 'following', sourceKey: 'id'});
+User.hasMany(User, { as: 'Followed', foreignKey: 'followed', sourceKey: 'id'});
 
 Captcha.belongsTo(User);
+
+User.belongsToMany(Menu, {as: 'Collections', through: 'collectors_collections'});
+Menu.belongsToMany(User, {as: 'Collectors', through: 'collectors_collections'});
+
+User.hasMany(Comment);
+Menu.hasMany(Comment);
 
 sequelize.sync();
 
 module.exports = {
 	User,
-	Captcha
+	Captcha,
+	Menu,
+	Comment
 };
