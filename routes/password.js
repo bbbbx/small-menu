@@ -1,8 +1,10 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const svgCaptcha = require('svg-captcha');
+const bcrypt = require('bcrypt');
 const { User, Captcha } = require('../models/index');
 const router = express.Router();
+const saltRounds = 10;
 
 router.get('/', function(req, res) {
 	const captcha = svgCaptcha.create();
@@ -63,9 +65,10 @@ router.post('/', function(req, res) {
 							userId: user.dataValues.id
 						})
 							.then(() => {
-								req.flash('info', '邮件已发送');
-								// res.render('password', { account, email, password, passwordConfirm });
-								res.redirect('/password');
+								// req.flash('info', '邮件已发送');
+								res.locals.infos = ['邮件已发送'];
+								res.render('password', { account, email, password, passwordConfirm });
+								// res.redirect('/password');
 							});
 					});
 				} else {
@@ -78,7 +81,7 @@ router.post('/', function(req, res) {
 			.then(user => {
 				if (!user) {
 					req.flash('error', '用户不存在！');
-					res.render('password');
+					res.redirect('/password');
 				} else {
 					Captcha.findAll({
 						where: { 
@@ -92,19 +95,41 @@ router.post('/', function(req, res) {
 						.then(captchas => {
 							if (!captchas[0]) {
 								req.flash('error', '请先获取邮箱验证码');
-								res.render('password');
+								res.redirect('/password');
 							}
 							if (captchas[0].dataValues.value === emailCaptcha) {
 								const duration = new Date().getTime() - captchas[0].dataValues.timestamp;
 								if (duration > 600000) {
 									req.flash('error', '邮箱验证码超过十分钟，请重新发送。');
-									res.render('password');	
+									res.redirect('/password');
+								} else {
+									Captcha.update({
+										used: true
+									}, {
+										where: {
+											id: captchas[0].dataValues.id
+										}
+									})
+										.then(() => {
+											bcrypt.hash(passwordConfirm, saltRounds, function(err, hash) {
+												User.update({
+													password: hash
+												}, {
+													where: {
+														email,
+														account
+													}
+												})
+													.then(() => {
+														req.flash('info', '重置密码成功，请重新登录。');
+														res.redirect('/login');
+													});
+											});
+										});
 								}
-								req.flash('info', '重置密码成功，请重新登录。');
-								res.redirect('/login');
 							} else {
 								req.flash('error', '邮箱验证码不正确');
-								res.render('password');
+								res.redirect('/password');
 							}
 						});
 				}
