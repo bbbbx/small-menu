@@ -74,9 +74,10 @@ router.get('/collect', function(req, res) {
 							req.flash('error', '菜谱不存在！');
 							res.redirect('/');
 						}
-						user.addMenu(menu);
-						req.flash('info', '收藏成功');
-						res.redirect(`/detail/${menuId}`);
+						user.addMenu(menu).then(() => {
+							req.flash('info', '收藏成功');
+							res.redirect(`/detail/${menuId}`);
+						});
 					});
 			});
 	} else if (userId === '' || typeof userId === 'undefined' || 
@@ -125,6 +126,44 @@ router.delete('/usermenus', function(req, res) {
 
 router.get('/usermenus', function(req, res) {
 	res.end('get');
+});
+
+router.get('/following', function(req, res) {
+	const { followingId } = req.query;
+	if (!res.locals.currentUser) {
+		req.flash('error', '请先登录！');
+		res.redirect('/login');
+	} else {
+		User.findById(res.locals.currentUser.id).then(user => {
+			if (!user) {
+				req.flash('error', '请先登录！');
+				res.redirect('/login');
+			} else {
+				User.findById(followingId).then(following => {
+					user.addFollowing(following).then(() => {
+						following.addFollowers(user).then(() => {
+
+							req.session.user = user.dataValues;
+							req.session.user.following = [];
+							req.session.user.followers = [];
+							user.getFollowing().then(followings => {
+								followings.map((value) => {
+									req.session.user.following.push(value);
+								});
+								user.getFollowers().then(followers => {
+									followers.map((value) => {
+										req.session.user.followers.push(value);
+									});
+									req.flash('info', '关注成功');
+									res.redirect(`/user/${followingId}`);
+								});
+							});
+						});
+					});
+				});
+			}
+		});
+	}
 });
 
 module.exports = router;

@@ -23,8 +23,10 @@ const Comment = sequelize.import('./comment');
 const UserMenu = sequelize.import('./userMenu');
 
 
-User.hasMany(User, { as: 'Following', foreignKey: 'following', sourceKey: 'id'});
-User.hasMany(User, { as: 'Followed', foreignKey: 'followed', sourceKey: 'id'});
+// User.hasMany(User, { as: 'Following', foreignKey: 'following', sourceKey: 'id'});
+// User.hasMany(User, { as: 'Followers', foreignKey: 'followers', sourceKey: 'id'});
+User.belongsToMany(User, { as: 'Following', through: 'UserFollowing'});
+User.belongsToMany(User, { as: 'Followers', through: 'UserFollowers'});
 
 Captcha.belongsTo(User);
 

@@ -3,6 +3,12 @@ const router = express.Router();
 const { User } = require('../models/index');
 
 router.get('/', function(req, res) {
+	
+
+	res.end('get');
+});
+
+router.get('/0', function(req, res) {
 	if (req.isAuthenticated() || req.session.user) {
 		// res.locals.currentUser = req.session.user ? req.session.user: req.user;
 		res.locals.collections = [];
@@ -37,12 +43,24 @@ router.get('/:id', function(req, res) {
 				res.redirect('/user');
 			} else {
 				res.locals.currentUser = user.dataValues;
+				res.locals.currentUser.following = [];
+				res.locals.currentUser.followers = [];
 				user.getMenus().then(menus => {
 					menus.map((value, index) => {
 						res.locals.collections.push(menus[index]);
 					});
 					res.locals.removeVisiable = false;
-					res.render('user');
+					user.getFollowing().then(followings => {
+						followings.map((value) => {
+							res.locals.currentUser.following.push(value);
+						});
+						user.getFollowers().then(followers => {
+							followers.map((value) => {
+								res.locals.currentUser.followers.push(value);
+							});
+							res.render('user');
+						});
+					});
 				});
 			}
 		});

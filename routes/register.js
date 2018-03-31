@@ -70,8 +70,20 @@ router.post('/', function(req, res) {
 										transporter.sendMail(mailOption);
 										// [TODO] 验证用户
 										req.session.user = user.dataValues;
-										req.flash('info', '注册成功，请验证邮箱。');
-										res.redirect('/');
+										req.session.user.following = [];
+										req.session.user.followers = [];
+										user.getFollowing().then(followings => {
+											followings.map((value) => {
+												req.session.user.following.push(value);
+											});
+											user.getFollowers().then(followers => {
+												followers.map((value) => {
+													req.session.user.followers.push(value);
+												});
+												req.flash('info', '注册成功，请验证邮箱。');
+												res.redirect('/');
+											});
+										});
 									});
 							});
 						

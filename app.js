@@ -38,12 +38,13 @@ app.use(session({
 	saveUninitialized: true
 }));
 app.use(flash());
-app.use(passport.initialize());
-app.use(passport.session());
-setUpPassport();
+// app.use(passport.initialize());
+// app.use(passport.session());
+// setUpPassport();
 
 app.use(function(req, res, next) {	
-	res.locals.currentUser = req.user ? req.user: req.session.user;
+	// res.locals.currentUser = req.user ? req.user: req.session.user;
+	res.locals.currentUser = req.session.user;
 	res.locals.errors = req.flash('error');
 	res.locals.infos = req.flash('info');
 	next();
