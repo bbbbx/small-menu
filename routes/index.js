@@ -1,5 +1,5 @@
 const express = require('express');
-const { User, Captcha, Menu } = require('../models/index');
+const { User, Captcha, Menu, UserMenu } = require('../models/index');
 const router = express.Router();
 
 router.get('/', function(req, res) {
@@ -33,17 +33,25 @@ router.get('/confirmEmail', function(req, res) {
 						req.flash('error', '邮件验证码不存在！');
 						res.redirect('/register');
 					} else {
-						User.update({
-							confirmed: true
-						}, { 
-							where: { 
-								email,
-								account 
+						Captcha.update({
+							used: true
+						}, {
+							where: {
+								id: captcha.id
 							}
 						}).then(() => {
-							req.session.user = user.dataValues;
-							req.flash('info', '邮箱验证成功');
-							res.redirect('/');
+							User.update({
+								confirmed: true
+							}, { 
+								where: { 
+									email,
+									account 
+								}
+							}).then(() => {
+								req.session.user = user.dataValues;
+								req.flash('info', '邮箱验证成功');
+								res.redirect('/');
+							});
 						});
 					}
 				});
@@ -79,6 +87,44 @@ router.get('/collect', function(req, res) {
 		req.flash('error', '请先登录后，再收藏！');
 		res.redirect('/login');
 	}
+});
+
+router.delete('/usermenus', function(req, res) {
+	const { menuId } = req.body;
+
+	if (res.locals.currentUser) {
+		UserMenu.findOne({
+			where: { 
+				userId: res.locals.currentUser.id,
+				menuId: parseInt(menuId)
+			}
+		}).then(userMenu => {
+			if (!userMenu) {
+				req.flash('error', '收藏不存在！');
+				res.send('收藏不存在！');
+				// res.redirect('/');
+			} else {
+				userMenu.destroy().then(userMenu => {
+					// req.flash('info', '移除成功');
+					res.end();
+					// res.redirect(200, '/user');
+				});
+				// req.flash('info', '移除成功');
+				// res.redirect(200, '/user');
+				// router.get('/user');
+				// res.locals.infos = ['移除成功'];
+				// res.render('user');
+			}
+		});
+	} else {
+		// req.flash('error', '请先登录！');
+		// res.redirect('/login');
+		res.send('请先登录！');
+	}
+});
+
+router.get('/usermenus', function(req, res) {
+	res.end('get');
 });
 
 module.exports = router;

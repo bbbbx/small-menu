@@ -9,6 +9,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const setUpPassport = require('./setuppassport');
+const { PORT } = require('./utilities/const');
 
 const index = require('./routes/index');
 const search = require('./routes/search');
@@ -77,4 +78,4 @@ app.use(function(err, req, res) {
 	res.render('error');
 });
 
-http.createServer(app).listen(3000);
+http.createServer(app).listen(PORT);

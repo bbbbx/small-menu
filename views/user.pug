@@ -7,12 +7,28 @@ block content
         img(class="card-img-top rounded-circle" style="width: 10rem;" src=currentUser.avatar alt="Card image cap")
       div(class="col-6")
         h5(class="card-title") #{ currentUser.username }
+        div(class="font-weight-light") #{ currentUser.account }
+          if currentUser.gender === 1
+              img(class="mx-1" src="/masculine.svg" alt="/masculine.svg" style="width: 1rem")
+          else if currentUser.gender === 0
+            img(class="mx-1" src="/femenine.svg" alt="/femenine.svg" style="width: 1rem")
+          else
+            span(class="font-weight-light") 未知性别
+        div(class="font-weight-light")
+          img(src="/envelope.svg" alt="/envelope.svg" style="width: 1rem")
+          span(class="mx-1") #{ currentUser.email }
+          if currentUser.confirmed
+            span(class="badge badge-success") 已验证
+          else 
+            span(class="badge badge-danger") 未验证
         div(class="card-text")
           | 关注
           span(class="text-info") #{ currentUser.following ? currentUser.following: 0 }
           | 粉丝
           span(class="text-info") #{ currentUser.followed ?  currentUser.followed: 0}
           p #{ currentUser.intro }
+          if !currentUser.confirmed
+            div(class="alert alert-danger" role="alert") 未验证邮箱，请尽快验证！验证后请重新登录
       div(class="col-3")
         a(href="#" class="btn btn-primary w-75") 关注
     hr
@@ -34,7 +50,16 @@ block content
                     img(class="card-img-top" src=collections[i].albums alt="collections[i].albums")
                     div(class="card-body")
                       h5(class="card-title") #{ collections[i].title }
-                      a(href=`/detail/${collections[i].id}` class="btn btn-success") 查看
+                      div(class="row")
+                        if removeVisiable
+                          div(class="col")
+                            a(href=`/detail/${collections[i].id}` class="btn btn-success") 查看
+                          div(class="col")
+                            input(id=`menuId${i}` type="hidden" name="menuId" value=collections[i].id)
+                            input(id=`remove${i}` type="button" class="btn btn-danger" value="移除" onclick='$.ajax({url: "http://localhost:3000/usermenus", method: "DELETE", data: { userId: ' + currentUser.id + ', menuId: ' + collections[i].id + '} } ).done(function() { $("#remove' + i + '").parent().parent().parent().parent().remove(); });')
+                        else
+                          div(class="col")
+                            a(href=`/detail/${collections[i].id}` class="btn btn-success") 查看
               else 
                 p 没有收藏
 

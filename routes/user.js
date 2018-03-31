@@ -6,7 +6,7 @@ router.get('/', function(req, res) {
 	if (req.isAuthenticated() || req.session.user) {
 		// res.locals.currentUser = req.session.user ? req.session.user: req.user;
 		res.locals.collections = [];
-		User.findOne({ where: {id: res.locals.currentUser.id }})
+		User.findById(res.locals.currentUser.id)
 			.then(user => {
 				if (!user) {
 					req.flash('error', '用户不存在！');
@@ -16,6 +16,7 @@ router.get('/', function(req, res) {
 						menus.map((value, index) => {
 							res.locals.collections.push(menus[index]);
 						});
+						res.locals.removeVisiable = true;
 						res.render('user');
 					});
 				}
@@ -28,14 +29,21 @@ router.get('/', function(req, res) {
 
 router.get('/:id', function(req, res) {
 	const { id } = req.params;
+	res.locals.collections = [];
 	User.findById(id)
 		.then(user => {
-			if (user) {
-				res.locals.currentUser = user.dataValues;
-				res.render('user');
-			} else {
+			if (!user) {
 				req.flash('error', '用户不存在！');
-				res.redirect('/login');
+				res.redirect('/user');
+			} else {
+				res.locals.currentUser = user.dataValues;
+				user.getMenus().then(menus => {
+					menus.map((value, index) => {
+						res.locals.collections.push(menus[index]);
+					});
+					res.locals.removeVisiable = false;
+					res.render('user');
+				});
 			}
 		});
 
