@@ -64,7 +64,7 @@ block content
                 p 没有收藏
 
           div(class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab") 
-            div(class="card-columns mt-4")
+            div(class="card-columns mt-4 w-50")
               if currentUser.following.length > 0
                 - for (let i = 0; i < currentUser.following.length; i++)
                   div(class="card")
@@ -76,7 +76,7 @@ block content
                 p 没有关注的人
 
           div(class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab")
-            div(class="card-columns mt-4")
+            div(class="card-columns mt-4 w-50")
               if currentUser.followers.length > 0
                 - for (let i = 0; i < currentUser.followers.length; i++)
                   div(class="card")
