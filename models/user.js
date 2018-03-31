@@ -35,6 +35,12 @@ module.exports = function(sequelize, DataTypes) {
 			defaultValue: 'http://ohjn9v8nd.bkt.clouddn.com/boy.png',
 			comment: '用户头像'
 		},
+		intro: {
+			type: DataTypes.STRING,
+			allowNull: true,
+			defaultValue: '此人没有简介',
+			comment: '用户简介'
+		},
 		confirmed: {
 			type: DataTypes.BOOLEAN,
 			allowNull: false,

@@ -38,7 +38,7 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		steps: {
 			type: DataTypes.TEXT,
-			allowNull: false,
+			allowNull: true,
 			comment: '食谱步骤'
 		}
 	});

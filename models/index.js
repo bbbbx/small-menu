@@ -20,6 +20,7 @@ const Menu = sequelize.import('./menu');
 const User = sequelize.import('./user');
 const Captcha = sequelize.import('./captcha');
 const Comment = sequelize.import('./comment');
+const UserMenu = sequelize.import('./userMenu');
 
 
 User.hasMany(User, { as: 'Following', foreignKey: 'following', sourceKey: 'id'});
@@ -27,8 +28,8 @@ User.hasMany(User, { as: 'Followed', foreignKey: 'followed', sourceKey: 'id'});
 
 Captcha.belongsTo(User);
 
-User.belongsToMany(Menu, {as: 'Collections', through: 'collectors_collections'});
-Menu.belongsToMany(User, {as: 'Collectors', through: 'collectors_collections'});
+User.belongsToMany(Menu, { through: UserMenu});
+Menu.belongsToMany(User, { through: UserMenu});
 
 User.hasMany(Comment);
 Menu.hasMany(Comment);
@@ -39,5 +40,6 @@ module.exports = {
 	User,
 	Captcha,
 	Menu,
-	Comment
+	Comment,
+	UserMenu
 };

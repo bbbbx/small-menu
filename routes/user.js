@@ -3,11 +3,23 @@ const router = express.Router();
 const { User } = require('../models/index');
 
 router.get('/', function(req, res) {
-	if (req.isAuthenticated()) {
-		res.render('user');
-	} else if (req.session.user) {
-		res.locals.currentUser = req.session.user;
-		res.render('user');
+	if (req.isAuthenticated() || req.session.user) {
+		// res.locals.currentUser = req.session.user ? req.session.user: req.user;
+		res.locals.collections = [];
+		User.findOne({ where: {id: res.locals.currentUser.id }})
+			.then(user => {
+				if (!user) {
+					req.flash('error', '用户不存在！');
+					res.redirect('/login');
+				} else {
+					user.getMenus().then(menus => {
+						menus.map((value, index) => {
+							res.locals.collections.push(menus[index]);
+						});
+						res.render('user');
+					});
+				}
+			});
 	} else {
 		req.flash('error', '请先登录！');
 		res.redirect('login');

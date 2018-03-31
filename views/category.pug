@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  div(class="container")
+    div(class="card-columns")
+      - for (var i = 0; i < data.result.data.length; i++)
+        div(class="card")
+          img(class="card-img-top" src=data.result.data[i].albums[0] alt="Card image cap")
+          div(class="card-body")
+            a(href=`/detail/${data.result.data[i].id}`)
+              h5(class="card-title") #{data.result.data[i].title}
+            p(class="card-text") #{ data.result.data[i].imtro }

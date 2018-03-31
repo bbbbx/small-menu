@@ -3,12 +3,41 @@ extends layout
 block content
   div(class="container")
     div(class="row")
+      div(class="col-3 text-right")
+        img(class="card-img-top rounded-circle" style="width: 10rem;" src=currentUser.avatar alt="Card image cap")
+      div(class="col-6")
+        h5(class="card-title") #{ currentUser.username }
+        div(class="card-text")
+          | 关注
+          span(class="text-info") #{ currentUser.following ? currentUser.following: 0 }
+          | 粉丝
+          span(class="text-info") #{ currentUser.followed ?  currentUser.followed: 0}
+          p #{ currentUser.intro }
+      div(class="col-3")
+        a(href="#" class="btn btn-primary w-75") 关注
+    hr
+    div(class="row text-center")
       div(class="col")
-        div(class="card" style="width: 18rem;")
-          img(class="card-img-top rounded-circle" src=currentUser.avatar alt="Card image cap")
-          div(class="card-body")
-            h5(class="card-title") 你好, #{ currentUser.username }
-            p(class="card-text") 性别：#{ currentUser.gender }
-            a(href="#" class="btn btn-primary") Go somewhere
-      div(class="col")
-      div(class="col")
+        ul(class="nav nav-tabs" id="myTab" role="tablist")
+          li(class="nav-item")
+            a(class="nav-link active" id="collection-tab" data-toggle="tab" href="#collection" role="tab" aria-controls="collection" aria-selected="true") 收藏
+          li(class="nav-item")
+            a(class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false") Profile
+          li(class="nav-item")
+            a(class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false") Contact
+        div(class="tab-content" id="myTabContent")
+          div(class="tab-pane fade show active" id="collection" role="tabpanel" aria-labelledby="collection-tab")
+            div(class="card-columns mt-4")
+              if collections.length > 0
+                - for (let i = 0; i < collections.length; i++)
+                  div(class="card")
+                    img(class="card-img-top" src=collections[i].albums alt="collections[i].albums")
+                    div(class="card-body")
+                      h5(class="card-title") #{ collections[i].title }
+                      a(href=`/detail/${collections[i].id}` class="btn btn-success") 查看
+              else 
+                p 没有收藏
+
+
+          div(class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab") Profile
+          div(class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab") Contact
