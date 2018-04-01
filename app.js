@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
 	secret: 'a5717a649d346ed0c51be68888c130cd',
-	resave: false,
+	resave: true,
 	saveUninitialized: true
 }));
 app.use(flash());

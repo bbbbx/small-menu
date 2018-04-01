@@ -1,46 +1,58 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const svgCaptcha = require('svg-captcha');
 const { User } = require('../models/index');
 const router = express.Router();
 
 router.get('/', function(req, res) {
+	const captcha = svgCaptcha.create();
+	req.session.captcha = captcha.text;
+	res.locals.account = req.session.account;
+	delete req.session.account;
+	res.locals.captcha = captcha;
 	res.render('login');
 });
 
 router.post('/', function(req, res) {
-	const { account, password } = req.body;
-	User.findOne({ where: { account }})
-		.then(user => {
-			if (!user) {
-				req.flash('error', '用户不存在!');
-				res.redirect('/login');
-			}
-			bcrypt.compare(password, user.password, (err, isMatch) => {
-				if (err) {
-					req.flash('error', err);
+	const { account, password, captcha } = req.body;
+	if (captcha !== req.session.captcha) {
+		req.flash('error', '验证码错误！');
+		res.redirect('login');
+	} else {
+		User.findOne({ where: { account }})
+			.then(user => {
+				if (!user) {
+					req.flash('error', '用户不存在!');
 					res.redirect('/login');
 				}
-				if (isMatch) {
-					req.session.user = user.dataValues;
-					req.session.user.following = [];
-					req.session.user.followers = [];
-					user.getFollowing().then(followings => {
-						followings.map((value) => {
-							req.session.user.following.push(value);
-						});
-						user.getFollowers().then(followers => {
-							followers.map((value) => {
-								req.session.user.followers.push(value);
+				bcrypt.compare(password, user.password, (err, isMatch) => {
+					if (err) {
+						req.flash('error', err);
+						res.redirect('/login');
+					} else if (isMatch) {
+						req.session.user = user.dataValues;
+						req.session.user.following = [];
+						req.session.user.followers = [];
+						user.getFollowing().then(followings => {
+							followings.map((value) => {
+								req.session.user.following.push(value);
 							});
-							res.redirect('/');
+							user.getFollowers().then(followers => {
+								followers.map((value) => {
+									req.session.user.followers.push(value);
+								});
+								res.redirect('/');
+							});
 						});
-					});
-				} else {
-					req.flash('error', '密码错误！');
-					res.redirect('/login');
-				}
+					} else {
+						req.flash('error', '密码错误！');	
+						req.session.account = account;
+						res.redirect('/login');
+					}
+				});
 			});
-		});
+		
+	}
 	// User.findById(res.locals.currentUser.id).then(user => {
 	// 	req.session.user.following = user.getFollowing();
 	// 	req.flash('info', '登录成功');

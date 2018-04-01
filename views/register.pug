@@ -17,6 +17,8 @@ block content
             option(value="女" class="dropdown-item")
           hr
           input(type="text" class="form-control" id="captcha" name="captcha" required placeholder="验证码(区分大小写)")
-          #{ captcha.data }
+          != captcha.data 
           button(type="submit" class="btn btn-primary") 注册
       div(class="col") 
+
+  script(src="/js/register.js")
