@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 const svgCaptcha = require('svg-captcha');
 const bcrypt = require('bcrypt');
 const { User, Captcha } = require('../models/index');
-const { AVATAR_BOY, AVATAR_GIRL } = require('../utilities/const');
+const { AVATAR_BOY, AVATAR_GIRL, EMAIL_ACCOUNT, EMAIL_PASS, PORT, CLOUD_HOSTNAME } = require('../utilities/const');
 const router = express.Router();
 const saltRounds = 10;
 
@@ -53,16 +53,16 @@ router.post('/', function(req, res) {
 											port: 465,
 											secure: true,
 											auth: {
-												user: 'venus_box@163.com',
-												pass: 'venus123'
+												user: EMAIL_ACCOUNT,
+												pass: EMAIL_PASS
 											}
 										});
 									
 										const mailOption = {
-											from: '"小当家" <venus_box@163.com>',
+											from: `"小当家" <${EMAIL_ACCOUNT}>`,
 											to: email,
 											subject: '小当家注册验证',
-											html: `<p>${user.dataValues.username}：</p><p>&nbsp;&nbsp;请点击以下链接完成邮箱验证：</p><p><a href="http://localhost:3000/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}">http://localhost:3000/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}</a></p><p>如果以上链接无法点击，请将上面的地址复制到你的浏览器地址栏。</p>`
+											html: `<p>${user.dataValues.username}：</p><p>&nbsp;&nbsp;请点击以下链接完成邮箱验证：</p><p><a href="${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}">${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}</a></p><p>如果以上链接无法点击，请将上面的地址复制到你的浏览器地址栏。</p>`
 										};
 										
 										const timestamp = new Date().getTime();
@@ -73,22 +73,27 @@ router.post('/', function(req, res) {
 											userId: user.dataValues.id
 										});
 										
-										transporter.sendMail(mailOption);
-										// [TODO] 验证用户
-										req.session.user = user.dataValues;
-										req.session.user.following = [];
-										req.session.user.followers = [];
-										user.getFollowing().then(followings => {
-											followings.map((value) => {
-												req.session.user.following.push(value);
-											});
-											user.getFollowers().then(followers => {
-												followers.map((value) => {
-													req.session.user.followers.push(value);
+										transporter.sendMail(mailOption, (err) => {
+											if (err) {
+												console.log(err);
+											} else {
+												// [TODO] 验证用户
+												req.session.user = user.dataValues;
+												req.session.user.following = [];
+												req.session.user.followers = [];
+												user.getFollowing().then(followings => {
+													followings.map((value) => {
+														req.session.user.following.push(value);
+													});
+													user.getFollowers().then(followers => {
+														followers.map((value) => {
+															req.session.user.followers.push(value);
+														});
+														req.flash('info', '注册成功，请验证邮箱。');
+														res.redirect('/');
+													});
 												});
-												req.flash('info', '注册成功，请验证邮箱。');
-												res.redirect('/');
-											});
+											}
 										});
 									});
 							});
