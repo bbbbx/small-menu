@@ -45,6 +45,7 @@ app.use(flash());
 app.use(function(req, res, next) {	
 	// res.locals.currentUser = req.user ? req.user: req.session.user;
 	res.locals.currentUser = req.session.user;
+	res.locals.navAvatar = req.session.user ? req.session.user.avatar: false;
 	res.locals.errors = req.flash('error');
 	res.locals.infos = req.flash('info');
 	next();

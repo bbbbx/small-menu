@@ -43,7 +43,7 @@ block content
 						hr
 		hr
 		if currentUser
-			div(class="row")
+			div(class="row" id="commentForm")
 				div(class="col-2")
 				div(class="col-8")
 					form(action="/comment" method="GET")
@@ -59,10 +59,14 @@ block content
 				a(href="/login") 登录
 				span 后即可发表评论
 		hr
+		- for (var x = 0; x < errors.length; x++) 
+			div(class="alert alert-danger text-center" role="alert") #{ errors[x] }
+		- for (var j = 0; j < infos.length; j++) 
+			div(class="alert alert-success text-center" role="alert") #{ infos[j] }
 		div(class="row")
 			div(class="col-2")
 			div(class="col-8")
-				h4 评论区
+				h4(id="commentArea") 评论区
 				hr
 				- for (let i = 0; i < comments.length; i++)
 					div(class="row")

@@ -20,7 +20,7 @@ router.get('/confirmEmail', function(req, res) {
 		.then(user => {
 			if (!user) {
 				req.flash('error', '用户不存在');
-				res.redirect('/register');
+				res.redirect('/');
 			} else {
 				Captcha.findOne({
 					where: { 
@@ -31,7 +31,7 @@ router.get('/confirmEmail', function(req, res) {
 				}).then(captcha => {
 					if (!captcha) {
 						req.flash('error', '邮件验证码不存在！');
-						res.redirect('/register');
+						res.redirect('/');
 					} else {
 						Captcha.update({
 							used: true
@@ -48,7 +48,7 @@ router.get('/confirmEmail', function(req, res) {
 									account 
 								}
 							}).then(() => {
-								req.session.user = user.dataValues;
+								// req.session.user = user.dataValues;
 								req.flash('info', '邮箱验证成功');
 								res.redirect('/');
 							});
@@ -183,7 +183,7 @@ router.get('/comment', function(req, res) {
 		}).then(comment => {
 			if (comment) {
 				req.flash('info', '发表成功');
-				res.redirect(`/detail/${menuId}`);
+				res.redirect(`/detail/${menuId}#commentForm`);
 			} else {
 				req.flash('error', '发表失败！');
 				res.redirect(`/detail/${menuId}`);

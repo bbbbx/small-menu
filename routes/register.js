@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 const svgCaptcha = require('svg-captcha');
 const bcrypt = require('bcrypt');
 const { User, Captcha } = require('../models/index');
+const { AVATAR_BOY, AVATAR_GIRL } = require('../utilities/const');
 const router = express.Router();
 const saltRounds = 10;
 
@@ -13,13 +14,15 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-	const { email, account, password, passwordConfirm, captcha } = req.body;
-
+	const { email, account, password, passwordConfirm, gender, captcha } = req.body;
 	if (captcha !== req.session.captcha) {
 		req.flash('error', '验证码错误！注意区分大小写');
 		res.redirect('/register');
 	} else if (password !== passwordConfirm) {
 		req.flash('error', '两次密码不一致');
+		res.redirect('/register');
+	} else if (gender !== '男' && gender !== '女') {
+		req.flash('error', '性别有误！');
 		res.redirect('/register');
 	} else {
 		const CAPTCHA = Math.floor(100000 + Math.random() * 899999);
@@ -31,13 +34,16 @@ router.post('/', function(req, res) {
 					res.redirect('/register');
 				} else {
 					bcrypt.hash(password, saltRounds, (err, hash) => {
-						const avatar = Math.random() > 0.5 ? 'http://ohjn9v8nd.bkt.clouddn.com/boy.png': 'http://ohjn9v8nd.bkt.clouddn.com/girl.png';
+						const avatar = gender === '男' ? AVATAR_BOY : AVATAR_GIRL;
+						const intGender = gender === '男' ? 1 : 0;
 
 						User.create({ 
 							email, 
 							account, 
 							username: account, 
-							password: hash, avatar 
+							password: hash,
+							avatar,
+							gender: intGender
 						})
 							.then(() => {
 								User.find({ where: { account }})

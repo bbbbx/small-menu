@@ -7,9 +7,14 @@ block content
         div(class="card")
           img(class="card-img-top" src=users[i].avatar alt="Card image cap")
           div(class="card-body")
-            h5(class="card-title") #{ users[i].username }
+            h5(class="card-title") #{ users[i].username } &nbsp;
             p(class="card-text") #{ users[i].intro }
-            p(class="card-text")
-              small(class="text-muted") #{ users[i].updatedAt }
+            p
+              | 关注：
+              span(class="text-info") #{ users[i].following } &nbsp;&nbsp; 
+              | 粉丝：
+              span(class="text-info") #{ users[i].followers }
+            //- p(class="card-text")
+            //-   small(class="text-muted") #{ users[i].updatedAt }
             a(href=`/user/${users[i].id}` class="btn btn-success") 查看
         

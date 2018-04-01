@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../models/index');
+const { User, Menu } = require('../models/index');
 
 router.get('/', function(req, res) {
 	User.findAll().then(users => {
@@ -11,10 +11,13 @@ router.get('/', function(req, res) {
 		users.map((value, index) => {
 			users[index].getFollowers().then((followers) => {
 				res.locals.users[index].followers = followers.length;
-				if (index === users.length - 1) {
-					console.log(res.locals.users);
-					res.render('chart');
-				}
+				users[index].getFollowing().then((following => {
+					res.locals.users[index].following = following.length;
+					if (index === users.length - 1) {
+						console.log(res.locals.users);
+						res.render('chart');
+					}
+				}));
 			});
 		});
 	});
@@ -23,6 +26,9 @@ router.get('/', function(req, res) {
 router.get('/0', function(req, res) {
 	if (req.isAuthenticated() || req.session.user) {
 		res.locals.collections = [];
+		res.locals.currentUser.comments = [];
+		res.locals.removeVisiable = true;
+
 		User.findById(res.locals.currentUser.id)
 			.then(user => {
 				if (!user) {
@@ -33,8 +39,21 @@ router.get('/0', function(req, res) {
 						menus.map((value, index) => {
 							res.locals.collections.push(menus[index]);
 						});
-						res.locals.removeVisiable = true;
-						res.render('user');
+						user.getComments().then(comments => {
+							if (comments.length === 0) {
+								res.render('user');
+							} else {
+								comments.map((value, index) => {
+									res.locals.currentUser.comments[index] = comments[index].dataValues;
+									Menu.findById(comments[index].menuId).then(menu => {
+										res.locals.currentUser.comments[index].menu = menu.dataValues;
+										if (index === comments.length - 1) {
+											res.render('user');
+										}
+									});
+								});
+							}
+						});
 					});
 				}
 			});
@@ -56,6 +75,7 @@ router.get('/:id', function(req, res) {
 				res.locals.currentUser = user.dataValues;
 				res.locals.currentUser.following = [];
 				res.locals.currentUser.followers = [];
+				res.locals.currentUser.comments = [];
 				user.getMenus().then(menus => {
 					menus.map((value, index) => {
 						res.locals.collections.push(menus[index]);
@@ -69,7 +89,21 @@ router.get('/:id', function(req, res) {
 							followers.map((value) => {
 								res.locals.currentUser.followers.push(value);
 							});
-							res.render('user');
+							user.getComments().then(comments => {
+								if (comments.length === 0) {
+									res.render('user');
+								} else {
+									comments.map((value, index) => {
+										res.locals.currentUser.comments[index] = comments[index].dataValues;
+										Menu.findById(comments[index].menuId).then(menu => {
+											res.locals.currentUser.comments[index].menu = menu.dataValues;
+											if (index === comments.length - 1) {
+												res.render('user');
+											}
+										});
+									});
+								}
+							});
 						});
 					});
 				});

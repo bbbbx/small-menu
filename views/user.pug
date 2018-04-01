@@ -41,6 +41,8 @@ block content
             a(class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false") 关注
           li(class="nav-item")
             a(class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false") 粉丝
+          li(class="nav-item")
+            a(class="nav-link" id="comment-tab" data-toggle="tab" href="#comment" role="tab" aria-controls="comment" aria-selected="false") 评论
         div(class="tab-content" id="myTabContent")
           div(class="tab-pane fade show active" id="collection" role="tabpanel" aria-labelledby="collection-tab")
             div(class="card-columns mt-4")
@@ -76,7 +78,7 @@ block content
                 p 没有关注的人
 
           div(class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab")
-            div(class="card-columns mt-4 w-50")
+            div(class="card-columns mt-4")
               if currentUser.followers.length > 0
                 - for (let i = 0; i < currentUser.followers.length; i++)
                   div(class="card")
@@ -86,3 +88,17 @@ block content
                       a(class="btn btn-success" href=`/user/${currentUser.followers[i].id}`) 查看
               else
                 p 没有粉丝
+          
+          div(class="tab-pane fade" id="comment" role="tabpanel" aria-labelledby="comment-tab")
+            div(class="card-columns mt-4")
+              if currentUser.comments.length > 0
+                - for (let i = 0; i < currentUser.comments.length; i++)
+                  div(class="card")
+                    img(class="card-img-top" src=currentUser.comments[i].menu.albums alt="currentUser.comments[i].menu.albums")
+                    div(class="card-body")
+                      h5(class="card-title") 评论对象：#{ currentUser.comments[i].menu.title }
+                      p(class="") 评论内容：
+                      != currentUser.comments[i].content 
+                      a(class="btn btn-success" href=`/detail/${currentUser.comments[i].menu.id}#commentArea`) 查看
+              else
+                p 未发表评论
