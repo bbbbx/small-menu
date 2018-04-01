@@ -1,43 +1,82 @@
 extends layout
 
 block content
-  div(class="container")
-    hr
-    div(class="row")
-      div(class="col-4")
-        div(class="card")
-          if typeof result.albums === 'string'
-            img(class="card-image-top" src=result.albums style="width: 22rem; background-size: cover")  
-          else
-            img(class="card-image-top" src=result.albums[0] style="width: 22rem; background-size: cover")
-          div(class="card-body")
-            h5(class="card-title") #{ result.title }
-            if currentUser
-              a(href=`/collect?userId=${currentUser.id}&menuId=${result.id}` class="btn btn-danger w-50")
-                img(src="/star.svg" alt="/star.svg" style="width: 2rem")
-                | &nbsp;
-                span(class="align-middle") 收藏
-            else
-              a(href=`/collect?userId=null&menuId=${result.id}` class="btn btn-danger w-50")
-                img(src="/star.svg" alt="/star.svg" style="width: 2rem")
-                | &nbsp;
-                span(class="align-middle") 收藏
-      div(class="col-8")
-        h6 原料：#{ result.ingredients }
-        h6 佐料：#{ result.burden }
-        p #{ result.imtro }
-        - for (var i = 0; i < result.tags.split(';').length; i++)
-          span(class="badge badge-pill badge-info") #{ result.tags.split(';')[i] }
-          | &nbsp;
-    hr
-    div(class="row")
-      div(class="col-4")
-        div(id="list-example" class="list-group")
-          - for (var j = 0; j < result.steps.length; j++)
-            a(class="list-group-item list-group-item-action" href=`#list-item-${j}`) #{ result.steps[j].step }
-      div(class="col-8")
-        div(data-spy="scroll" data-target="#list-example" data-offset="2" style="overflow: auto; position: relative; height: 800px")
-          - for (var k = 0; k < result.steps.length; k++)
-            h4(id=`list-item-${k}`) #{ result.steps[k].step }
-            img(src=result.steps[k].img alt='result.steps[k].img')
-            hr
+	div(class="container")
+		hr
+		div(class="row")
+			div(class="col-4")
+				div(class="card")
+					if typeof result.albums === 'string'
+						img(class="card-image-top" src=result.albums style="width: 22rem; background-size: cover")  
+					else
+						img(class="card-image-top" src=result.albums[0] style="width: 22rem; background-size: cover")
+					div(class="card-body")
+						h5(class="card-title") #{ result.title }
+						if currentUser
+							a(href=`/collect?userId=${currentUser.id}&menuId=${result.id}` class="btn btn-danger w-50")
+								img(src="/star.svg" alt="/star.svg" style="width: 2rem")
+								| &nbsp;
+								span(class="align-middle") 收藏
+						else
+							a(href=`/collect?userId=null&menuId=${result.id}` class="btn btn-danger w-50")
+								img(src="/star.svg" alt="/star.svg" style="width: 2rem")
+								| &nbsp;
+								span(class="align-middle") 收藏
+			div(class="col-8")
+				h6 原料：#{ result.ingredients }
+				h6 佐料：#{ result.burden }
+				p #{ result.imtro }
+				- for (var i = 0; i < result.tags.split(';').length; i++)
+					span(class="badge badge-pill badge-info") #{ result.tags.split(';')[i] }
+					| &nbsp;
+		hr
+		div(class="row")
+			div(class="col-4")
+				div(id="list-example" class="list-group")
+					- for (var j = 0; j < result.steps.length; j++)
+						a(class="list-group-item list-group-item-action" href=`#list-item-${j}`) #{ result.steps[j].step }
+			div(class="col-8")
+				div(data-spy="scroll" data-target="#list-example" data-offset="2" style="overflow: auto; position: relative; height: 800px")
+					- for (var k = 0; k < result.steps.length; k++)
+						h4(id=`list-item-${k}`) #{ result.steps[k].step }
+						img(src=result.steps[k].img alt='result.steps[k].img')
+						hr
+		hr
+		if currentUser
+			div(class="row")
+				div(class="col-2")
+				div(class="col-8")
+					form(action="/comment" method="GET")
+						input(type="hidden" value=result.id name="menuId")
+						div(class="form-group")
+							label(for="comment-content")
+								h4 吐个槽？
+							textarea(type="text" class="form-control" id="comment-content" placeholder="评论内容" row="5" name="commentContent")
+						input(class="btn btn-primary" type="submit" value="发表评论" )
+				div(class="col-2")
+		else
+			div(class="alert alert-danger text-center") 
+				a(href="/login") 登录
+				span 后即可发表评论
+		hr
+		div(class="row")
+			div(class="col-2")
+			div(class="col-8")
+				h4 评论区
+				hr
+				- for (let i = 0; i < comments.length; i++)
+					div(class="row")
+						div(class="col")
+							a(href=`/user/${comments[i].user.id}` class="")
+								img(src=comments[i].user.avatar alt="comment.user.avatar" style="width: 2rem")
+								span #{ comments[i].user.username } ：
+					div(class="row")
+						div(class="col")
+							p
+								!= comments[i].content
+							span(class="font-weight-light text-secondary") #{ i+1 } 楼
+							span(class="font-weight-light text-secondary") #{ comments[i].createdAt}
+					hr
+			div(class="col-2")
+
+

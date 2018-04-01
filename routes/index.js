@@ -1,5 +1,5 @@
 const express = require('express');
-const { User, Captcha, Menu, UserMenu } = require('../models/index');
+const { User, Captcha, Menu, UserMenu, Comment } = require('../models/index');
 const router = express.Router();
 
 router.get('/', function(req, res) {
@@ -162,6 +162,33 @@ router.get('/following', function(req, res) {
 					});
 				});
 			}
+		});
+	}
+});
+
+router.get('/comment', function(req, res) {
+	const { commentContent, menuId } = req.query;
+	if (commentContent === '') {
+		req.flash('error', '评论不能为空');
+		res.redirect(`/detail/${menuId}`);
+		res.end();
+	} else if (!req.session.user) {
+		req.flash('error', '请先登录！');
+		res.redirect('/login');
+	} else {
+		Comment.create({
+			content: commentContent,
+			userId: req.session.user.id,
+			menuId
+		}).then(comment => {
+			if (comment) {
+				req.flash('info', '发表成功');
+				res.redirect(`/detail/${menuId}`);
+			} else {
+				req.flash('error', '发表失败！');
+				res.redirect(`/detail/${menuId}`);
+			}
+			
 		});
 	}
 });

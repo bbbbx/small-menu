@@ -1,5 +1,5 @@
 const express = require('express');
-const { Menu } = require('../models/index');
+const { Menu, User } = require('../models/index');
 const router = express.Router();
 
 router.get('/:id', function(req, res) {
@@ -22,7 +22,25 @@ router.get('/:id', function(req, res) {
 						menu.dataValues.steps[parseInt(i/2)].step = temp[i];
 					}
 				}
-				res.render('detail', { result: menu.dataValues });
+				menu.getComments().then(comments => {
+					res.locals.comments = [];
+					if (comments.length === 0) {
+						res.render('detail', { result: menu.dataValues });
+					} else{
+						comments.map((value, index) => {
+							res.locals.comments[index] = comments[index].dataValues;
+							User.findById(comments[index].userId).then(user => {
+								res.locals.comments[index].user = user.dataValues;
+								if (index === comments.length - 1) {
+									console.log(res.locals.comments);
+									res.render('detail', { result: menu.dataValues });
+								}
+							});
+							// res.locals.comments.push(comments[index].dataValues);
+							// console.log(comments[index].dataValues);
+						});
+					}
+				});
 			}
 		});
 	// var result = req.session.foodData[id];
