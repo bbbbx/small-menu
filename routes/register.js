@@ -44,65 +44,51 @@ router.post('/', function(req, res) {
 							password: hash,
 							avatar,
 							gender: intGender
-						})
-							.then(() => {
-								User.find({ where: { account }})
-									.then(user => {
-										let transporter = nodemailer.createTransport({
-											host: 'smtp.163.com',
-											port: 465,
-											secure: true,
-											auth: {
-												user: EMAIL_ACCOUNT,
-												pass: EMAIL_PASS
-											}
-										});
-									
-										const mailOption = {
-											from: `"小当家" <${EMAIL_ACCOUNT}>`,
-											to: email,
-											subject: '小当家注册验证',
-											html: `<p>${user.dataValues.username}：</p><p>&nbsp;&nbsp;请点击以下链接完成邮箱验证：</p><p><a href="${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}">${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}</a></p><p>如果以上链接无法点击，请将上面的地址复制到你的浏览器地址栏。</p>`
-										};
-										
-										const timestamp = new Date().getTime();
-										Captcha.create({
-											timestamp,
-											used: false,
-											value: CAPTCHA,
-											userId: user.dataValues.id
-										});
-										
-										transporter.sendMail(mailOption, (err) => {
-											if (err) {
-												console.log(err);
-											} else {
-												// [TODO] 验证用户
-												req.session.user = user.dataValues;
-												req.session.user.following = [];
-												req.session.user.followers = [];
-												user.getFollowing().then(followings => {
-													followings.map((value) => {
-														req.session.user.following.push(value);
-													});
-													user.getFollowers().then(followers => {
-														followers.map((value) => {
-															req.session.user.followers.push(value);
-														});
-														req.flash('info', '注册成功，请验证邮箱。');
-														res.redirect('/');
-													});
-												});
-											}
-										});
-									});
+						}).then(user => {
+							let transporter = nodemailer.createTransport({
+								host: 'smtp.163.com',
+								port: 465,
+								secure: true,
+								auth: {
+									user: EMAIL_ACCOUNT,
+									pass: EMAIL_PASS
+								}
 							});
 						
+							const mailOption = {
+								from: `"小当家" <${EMAIL_ACCOUNT}>`,
+								to: email,
+								subject: '小当家注册验证',
+								html: `<p>${user.dataValues.username}：</p><p>&nbsp;&nbsp;请点击以下链接完成邮箱验证：</p><p><a href="${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}">${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}</a></p><p>如果以上链接无法点击，请将上面的地址复制到你的浏览器地址栏。</p>`
+							};
+							
+							const timestamp = new Date().getTime();
+							Captcha.create({
+								timestamp,
+								used: false,
+								value: CAPTCHA,
+								userId: user.dataValues.id
+							}).then(() => {
+								transporter.sendMail(mailOption, (error) => {
+									if (err) {
+										console.log(error);
+										req.flash('error', '注册出错！');
+										res.redirect('/');
+									} else {
+										// [TODO] 验证用户
+										req.session.user = user.dataValues;
+										req.session.user.following = [];
+										req.session.user.followers = [];
+										req.flash('info', '注册成功，请验证邮箱。');
+										res.redirect('/');
+									}
+								});
+							});
+						});
 					});
 				}
 			});
 	}
-
 });
 
 module.exports = router;
