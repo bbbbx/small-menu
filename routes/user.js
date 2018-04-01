@@ -5,21 +5,24 @@ const { User, Menu } = require('../models/index');
 router.get('/', function(req, res) {
 	User.findAll().then(users => {
 		res.locals.users = [];
-		users.map((value, index) => {
-			res.locals.users.push(users[index].dataValues);
-		});
-		users.map((value, index) => {
-			users[index].getFollowers().then((followers) => {
-				res.locals.users[index].followers = followers.length;
-				users[index].getFollowing().then((following => {
-					res.locals.users[index].following = following.length;
-					if (index === users.length - 1) {
-						console.log(res.locals.users);
-						res.render('chart');
-					}
-				}));
+		if (users.lenght === 0) {
+			res.render('chart');
+		} else {
+			users.map((value, index) => {
+				res.locals.users.push(users[index].dataValues);
 			});
-		});
+			users.map((value, index) => {
+				users[index].getFollowers().then((followers) => {
+					res.locals.users[index].followers = followers.length;
+					users[index].getFollowing().then((following => {
+						res.locals.users[index].following = following.length;
+						if (index === users.length - 1) {
+							res.render('chart');
+						}
+					}));
+				});
+			});
+		}
 	});
 });
 
