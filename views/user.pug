@@ -58,7 +58,7 @@ block content
                             a(href=`/detail/${collections[i].id}` class="btn btn-success") 查看
                           div(class="col")
                             input(id=`menuId${i}` type="hidden" name="menuId" value=collections[i].id)
-                            input(id=`remove${i}` type="button" class="btn btn-danger" value="移除" onclick='$.ajax({url: "http://localhost:3000/usermenus", method: "DELETE", data: { userId: ' + currentUser.id + ', menuId: ' + collections[i].id + '} } ).done(function() { $("#remove' + i + '").parent().parent().parent().parent().remove(); });')
+                            input(id=`remove${i}` type="button" class="btn btn-danger" value="移除" onclick='$.ajax({url: "http://smallmenu.venusworld.cn:3000/usermenus", method: "DELETE", data: { userId: ' + currentUser.id + ', menuId: ' + collections[i].id + '} } ).done(function() { $("#remove' + i + '").parent().parent().parent().parent().remove(); });')
                         else
                           div(class="col")
                             a(href=`/detail/${collections[i].id}` class="btn btn-success") 查看

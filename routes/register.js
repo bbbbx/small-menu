@@ -70,7 +70,7 @@ router.post('/', function(req, res) {
 								userId: user.dataValues.id
 							}).then(() => {
 								transporter.sendMail(mailOption, (error) => {
-									if (err) {
+									if (error) {
 										console.log(error);
 										req.flash('error', '注册出错！');
 										res.redirect('/');
