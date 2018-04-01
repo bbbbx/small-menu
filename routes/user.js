@@ -10,8 +10,6 @@ router.get('/', function(req, res) {
 		} else {
 			users.map((value, index) => {
 				res.locals.users.push(users[index].dataValues);
-			});
-			users.map((value, index) => {
 				users[index].getFollowers().then((followers) => {
 					res.locals.users[index].followers = followers.length;
 					users[index].getFollowing().then((following => {
