@@ -20,6 +20,7 @@ const register = require('./routes/register');
 const user = require('./routes/user');
 const password = require('./routes/password');
 const category = require('./routes/category');
+const menu = require('./routes/menu');
 
 let app = express();
 
@@ -60,6 +61,7 @@ app.use('/register', register);
 app.use('/user', user);
 app.use('/password', password);
 app.use('/category', category);
+app.use('/menu', menu);
 
 
 // catch 404 and forward to error handler

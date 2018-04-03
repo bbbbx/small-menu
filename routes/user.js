@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { User, Menu } = require('../models/index');
+const { PLEASE_LOGIN } = require('../utilities/const');
+const { GENDER_ERROR, UPDATE_SUCCESS } = require('../utilities/const');
 
 router.get('/', function(req, res) {
 	User.findAll().then(users => {
@@ -22,6 +24,22 @@ router.get('/', function(req, res) {
 			});
 		}
 	});
+});
+
+router.get('/setting', function(req, res) {
+	if (!req.session.user) {
+		req.flash('error', PLEASE_LOGIN);
+		res.redirect('/');
+	} else {
+		User.findById(parseInt(req.session.user.id)).then(user => {
+			if (!user) {
+				req.flash('error', PLEASE_LOGIN);
+				res.redirect('/');
+			} else {
+				res.render('setting');
+			}
+		});
+	}
 });
 
 router.get('/0', function(req, res) {
@@ -110,6 +128,35 @@ router.get('/:id', function(req, res) {
 				});
 			}
 		});
+});
+
+router.post('/setting', function(req, res) {
+	const { username, gender, intro} = req.body;
+	console.log(username, gender, intro);
+
+	if (gender !== '男' && gender !== '女') {
+		req.flash('error', GENDER_ERROR);
+		res.redirect('/user/setting');
+	} else {
+		const intGender = gender === '男' ? 1 : 0;
+		User.update({
+			username,
+			gender: intGender,
+			// avatar,
+			intro
+		}, {
+			where: { id: parseInt(req.session.user.id) }
+		}).then(() => {
+			User.findById(req.session.user.id).then(user => {
+				req.session.user.username = user.dataValues.username;
+				req.session.user.gender = user.dataValues.gender;
+				req.session.user.intro = user.dataValues.intro;
+				
+				req.flash('info', UPDATE_SUCCESS);
+				res.redirect('/user/0');
+			});
+		});
+	}
 });
 
 module.exports = router;

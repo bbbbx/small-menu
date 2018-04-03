@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  div(class="container")
+    div(class="row")
+      div(class="col")
+        h5(class="text-center") 修改个人资料
+        hr
+    div(class="row")
+      div(class="col")
+      div(class="col")
+        form(action="/user/setting" method="post")
+          label(for="username") 用户名
+          input(class="form-control" type="text" name="username" id="username" value=currentUser.username)
+          hr
+          label(for="username") 性别
+          input(class="form-control" type="text" list="gender-list" name="gender" id="gender")
+          datalist(id="gender-list")
+            option(value="男")
+            option(value="女")
+          hr
+          div(class="row")
+            div(class="col-11")
+              label(for="avatar" class="btn btn-primary") 点击选择上传头像(PNG, JPG)
+            //- img(src=navAvatar alt="navAvatar" width="100%" srcset="")
+            div(class="col-1")
+              input(class="" type="file" name="avatar" id="avatar" accept=".jpg, .jpeg, .png")
+          div(id="avatarPreview")
+            p 未选择文件
+          hr
+          label(for="username") 个人简介
+          textarea(class="form-control" type="text" name="intro" id="intro") #{ currentUser.intro }
+          input(type="submit" class="btn btn-primary my-2" value="提交")
+      div(class="col")
+  script(src="/js/setting.js")

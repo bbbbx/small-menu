@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  div(class="container")
+    h3(class="text-center my-4") 共有 #{ menus.length } 个记录
+    div(class="card-columns")
+      - for (var i = 0; i < menus.length; i++)
+        div(class="card")
+          img(class="card-img-top" src=menus[i].albums alt="menus[i].albums")
+          div(class="card-body")
+            a(href=`/detail/${menus[i].id}`)
+              h5(class="card-title") #{menus[i].title}
+            //- p(class="card-text") #{ menus[i].imtro }
+            - for (var j = 0; j < menus[i].tags.split(';').length; j++)
+              span(class="badge badge-pill badge-info") #{ menus[i].tags.split(';')[j] }
+              | &nbsp;

@@ -11,6 +11,10 @@ const AVATAR_GIRL = 'http://ohjn9v8nd.bkt.clouddn.com/girl.png';
 const EMAIL_ACCOUNT = 'venus_box@163.com';
 const EMAIL_PASS = 'venus123';
 
+const PLEASE_LOGIN = '请先登录！';
+const GENDER_ERROR = '性别有误！';
+const UPDATE_SUCCESS = '更新成功';
+
 module.exports = {
 	BASE_URL,
 	CATEGORY_URL,
@@ -21,5 +25,8 @@ module.exports = {
 	AVATAR_GIRL,
 	EMAIL_ACCOUNT,
 	EMAIL_PASS,
-	CLOUD_HOSTNAME
+	CLOUD_HOSTNAME,
+	PLEASE_LOGIN,
+	GENDER_ERROR,
+	UPDATE_SUCCESS
 };
