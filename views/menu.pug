@@ -12,5 +12,5 @@ block content
               h5(class="card-title") #{menus[i].title}
             //- p(class="card-text") #{ menus[i].imtro }
             - for (var j = 0; j < menus[i].tags.split(';').length; j++)
-              span(class="badge badge-pill badge-info") #{ menus[i].tags.split(';')[j] }
+              span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ menus[i].tags.split(';')[j] }
               | &nbsp;

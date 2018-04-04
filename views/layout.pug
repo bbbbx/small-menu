@@ -176,8 +176,9 @@ html(lang="en")
 
           ul(class="navbar-nav mr-2")
             if navAvatar
-              li(class="nav-item dropdown")
+              li(class="nav-item dropdown")                
                 a(class="dropdown-toggle " href="#" id="audience" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+                  span(class="font-weight-bold") #{ navUsername }
                   img(src=navAvatar alt="navAvatar" style="width: 2rem")
                 div(class="dropdown-menu" aria-labelledby="audience")
                   a(class="dropdown-item" href="/user/0") 个人中心

@@ -9,4 +9,7 @@ block content
           div(class="card-body")
             a(href=`/detail/${data.result.data[i].id}`)
               h5(class="card-title") #{data.result.data[i].title}
-            p(class="card-text") #{ data.result.data[i].imtro }
+            //- p(class="card-text") #{ data.result.data[i].imtro }
+            - for (var j = 0; j < data.result.data[i].tags.split(';').length; j++)
+              span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ data.result.data[i].tags.split(';')[j] }
+              | &nbsp;
