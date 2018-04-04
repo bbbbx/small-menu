@@ -1,10 +1,11 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 const svgCaptcha = require('svg-captcha');
 const bcrypt = require('bcrypt');
 const { User, Captcha } = require('../models/index');
 const router = express.Router();
 const saltRounds = 10;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 router.get('/', function(req, res) {
 	const captcha = svgCaptcha.create();
@@ -18,45 +19,27 @@ router.post('/', function(req, res) {
 	const CAPTCHA = Math.floor(100000 + Math.random() * 899999);
 	const SVGCaptcha = svgCaptcha.create();
 
-	if (captcha !== req.session.captcha) {
-		req.flash('error', '验证码错误！注意区分大小写');
-		res.redirect('/password');
-	}
-	if (password !== passwordConfirm) {
-		req.flash('error', '两次密码不一致！');
-		res.redirect('/password');
-	}
-
 	req.session.captcha = SVGCaptcha.text;
 	res.locals.captcha = SVGCaptcha;
 
-	console.log(emailCaptcha === '');
-	if (emailCaptcha === '') {
+	if (captcha !== req.session.captcha) {
+		req.flash('error', '验证码错误！注意区分大小写');
+		res.redirect('/password');
+	} else if (password !== passwordConfirm) {
+		req.flash('error', '两次密码不一致！');
+		res.redirect('/password');
+	} else if (emailCaptcha === '' && captcha === req.session.captcha) {
 		User.findOne({ where: { account, email }})
 			.then(user => {
 				if (user) {
-					let transporter = nodemailer.createTransport({
-						host: 'smtp.163.com',
-						port: 465,
-						secure: true,
-						auth: {
-							user: 'venus_box@163.com',
-							pass: 'venus123'
-						}
-					});
-				
-					const mailOption = {
-						from: '"小当家" <venus_box@163.com>',
+					const msg = {
 						to: email,
+						from: '"小当家" <venus@venusworld.cn>',
 						subject: '小当家找回密码',
 						html: `<p>${user.dataValues.username}：</p><p>&nbsp;&nbsp;您的验证码为<b>${CAPTCHA}</b>，十分钟内有效，切勿泄漏他人。</p>`
 					};
 					
-					transporter.sendMail(mailOption, (err) => {
-						if (err) {
-							req.flash('error', '发送邮件失败');
-							res.redirect('/password');
-						}
+					sgMail.send(msg).then(() => {
 						const timestamp = new Date().getTime();
 						Captcha.create({
 							timestamp,
@@ -65,11 +48,13 @@ router.post('/', function(req, res) {
 							userId: user.dataValues.id
 						})
 							.then(() => {
-								// req.flash('info', '邮件已发送');
 								res.locals.infos = ['邮件已发送'];
 								res.render('password', { account, email, password, passwordConfirm });
-								// res.redirect('/password');
 							});
+					}).catch(error => {
+						console.log(error);
+						req.flash('error', '发送邮件失败');
+						res.redirect('/password');
 					});
 				} else {
 					req.flash('error', '用户不存在！');

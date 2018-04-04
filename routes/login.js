@@ -24,32 +24,37 @@ router.post('/', function(req, res) {
 				if (!user) {
 					req.flash('error', '用户不存在!');
 					res.redirect('/login');
-				}
-				bcrypt.compare(password, user.password, (err, isMatch) => {
-					if (err) {
-						req.flash('error', err);
-						res.redirect('/login');
-					} else if (isMatch) {
-						req.session.user = user.dataValues;
-						req.session.user.following = [];
-						req.session.user.followers = [];
-						user.getFollowing().then(followings => {
-							followings.map((value) => {
-								req.session.user.following.push(value);
-							});
-							user.getFollowers().then(followers => {
-								followers.map((value) => {
-									req.session.user.followers.push(value);
+				} else if (user.confirmed) {
+					bcrypt.compare(password, user.password, (err, isMatch) => {
+						if (err) {
+							req.flash('error', err);
+							res.redirect('/login');
+						} else if (isMatch) {
+							req.session.user = user.dataValues;
+							req.session.user.following = [];
+							req.session.user.followers = [];
+							user.getFollowing().then(followings => {
+								followings.map((value) => {
+									req.session.user.following.push(value);
 								});
-								res.redirect('/');
+								user.getFollowers().then(followers => {
+									followers.map((value) => {
+										req.session.user.followers.push(value);
+									});
+									res.redirect('/');
+								});
 							});
-						});
-					} else {
-						req.flash('error', '密码错误！');	
-						req.session.account = account;
-						res.redirect('/login');
-					}
-				});
+						} else {
+							req.flash('error', '密码错误！');	
+							req.session.account = account;
+							res.redirect('/login');
+						}
+					});
+				} else {
+					req.flash('error', '请先验证注册邮箱！');	
+					req.session.account = account;
+					res.redirect('/login');
+				}
 			});
 		
 	}

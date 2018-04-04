@@ -1,11 +1,12 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 const svgCaptcha = require('svg-captcha');
 const bcrypt = require('bcrypt');
 const { User, Captcha } = require('../models/index');
-const { AVATAR_BOY, AVATAR_GIRL, EMAIL_ACCOUNT, EMAIL_PASS, PORT, CLOUD_HOSTNAME } = require('../utilities/const');
+const { AVATAR_BOY, AVATAR_GIRL, PORT, CLOUD_HOSTNAME } = require('../utilities/const');
 const router = express.Router();
 const saltRounds = 10;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 router.get('/', function(req, res) {
 	const captcha = svgCaptcha.create();
@@ -45,22 +46,29 @@ router.post('/', function(req, res) {
 							avatar,
 							gender: intGender
 						}).then(user => {
-							let transporter = nodemailer.createTransport({
-								host: 'smtp.163.com',
-								port: 465,
-								secure: true,
-								auth: {
-									user: EMAIL_ACCOUNT,
-									pass: EMAIL_PASS
-								}
-							});
-						
-							const mailOption = {
-								from: `"小当家" <${EMAIL_ACCOUNT}>`,
+							// let transporter = nodemailer.createTransport({
+							// 	host: 'smtp.163.com',
+							// 	port: 465,
+							// 	secure: true,
+							// 	auth: {
+							// 		user: EMAIL_ACCOUNT,
+							// 		pass: EMAIL_PASS
+							// 	}
+							// });
+
+							const msg = {
 								to: email,
+								from: '"小当家" <venus@venusworld.cn>',
 								subject: '小当家注册验证',
 								html: `<p>${user.dataValues.username}：</p><p>&nbsp;&nbsp;请点击以下链接完成邮箱验证：</p><p><a href="${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}">${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}</a></p><p>如果以上链接无法点击，请将上面的地址复制到你的浏览器地址栏。</p>`
 							};
+						
+							// const mailOption = {
+							// 	from: `"小当家" <${EMAIL_ACCOUNT}>`,
+							// 	to: email,
+							// 	subject: '小当家注册验证',
+							// 	html: `<p>${user.dataValues.username}：</p><p>&nbsp;&nbsp;请点击以下链接完成邮箱验证：</p><p><a href="${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}">${CLOUD_HOSTNAME}:${PORT}/confirmEmail?captcha=${CAPTCHA}&email=${email}&account=${account}</a></p><p>如果以上链接无法点击，请将上面的地址复制到你的浏览器地址栏。</p>`
+							// };
 							
 							const timestamp = new Date().getTime();
 							Captcha.create({
@@ -69,19 +77,18 @@ router.post('/', function(req, res) {
 								value: CAPTCHA,
 								userId: user.dataValues.id
 							}).then(() => {
-								transporter.sendMail(mailOption, (error) => {
-									if (error) {
-										console.log(error);
-										req.flash('error', '注册出错！');
-										res.redirect('/');
-									} else {
-										// [TODO] 验证用户
-										req.session.user = user.dataValues;
-										req.session.user.following = [];
-										req.session.user.followers = [];
-										req.flash('info', '注册成功，请验证邮箱。');
-										res.redirect('/');
-									}
+								// transporter.sendMail(mailOption, (error) => {
+								sgMail.send(msg).then(() => {
+									// req.session.user = user.dataValues;
+									// req.session.user.following = [];
+									// req.session.user.followers = [];
+									req.session.account = user.dataValues.account;
+									req.flash('info', '注册成功，请验证邮箱后再登录。');
+									res.redirect('/login');
+								}).catch(error => {
+									console.log(error);
+									req.flash('error', '注册出错！');
+									res.redirect('/');
 								});
 							});
 						});
