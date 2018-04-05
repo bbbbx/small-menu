@@ -76,14 +76,24 @@ router.get('/collect', function(req, res) {
 							req.flash('error', '菜谱不存在！');
 							res.redirect('/');
 						}
-						user.addMenu(menu).then(() => {
-							req.flash('info', '收藏成功');
-							res.redirect(`/detail/${menuId}`);
+						user.getMenus().then(menus => {
+							menus.map((value, index) => {
+								if (menuId === value.id) {
+									req.flash('error', '已收藏！');
+									res.redirect(`/detail/${menuId}`);
+								}
+								if (index == menus.length - 1) {
+									user.addMenu(menu).then(() => {
+										req.flash('info', '收藏成功');
+										req.session.user.collections.push(menu);
+										res.redirect(`/detail/${menuId}`);
+									});
+								}
+							});
 						});
 					});
 			});
-	} else if (userId === '' || typeof userId === 'undefined' || 
-			menuId === '' || typeof menuId === 'undefined') {
+	} else if (userId === '' || typeof userId === 'undefined' || menuId === '' || typeof menuId === 'undefined') {
 		req.flash('error', '参数错误！');
 		res.redirect('/');
 	} else {

@@ -17,7 +17,7 @@ router.post('/', function(req, res) {
 	const { account, password, captcha } = req.body;
 	if (captcha !== req.session.captcha) {
 		req.flash('error', '验证码错误！');
-		res.redirect('login');
+		res.redirect('/login');
 	} else {
 		User.findOne({ where: { account }})
 			.then(user => {
@@ -33,15 +33,22 @@ router.post('/', function(req, res) {
 							req.session.user = user.dataValues;
 							req.session.user.following = [];
 							req.session.user.followers = [];
+							req.session.user.collections = [];
+
 							user.getFollowing().then(followings => {
-								followings.map((value) => {
+								followings.map(value => {
 									req.session.user.following.push(value);
 								});
 								user.getFollowers().then(followers => {
-									followers.map((value) => {
+									followers.map(value => {
 										req.session.user.followers.push(value);
 									});
-									res.redirect('/');
+									user.getMenus().then(menus => {
+										menus.map(value => {
+											req.session.user.collections.push(value);
+										});
+										res.redirect('/');
+									});
 								});
 							});
 						} else {

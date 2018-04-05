@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const { Menu } = require('../models/index');
-const { BASE_URL, API_KEY } = require('../utilities/const');
+const { BASE_URL } = require('../utilities/const');
 const router = express.Router();
 
 router.get('/', function(req, res) {
@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
 
 	axios.get(BASE_URL, {
 		params: {
-			key: API_KEY,
+			key: process.env.MENU_API_KEY,
 			menu: foodName
 		}
 	})

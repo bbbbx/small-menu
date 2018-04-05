@@ -1,21 +1,22 @@
 const express = require('express');
 const axios = require('axios');
 const { Menu } = require('../models/index');
-const { CATEGORY_URL, API_KEY } = require('../utilities/const');
+const { CATEGORY_URL } = require('../utilities/const');
 const router = express.Router();
 
-router.get('/:cid', function(req, res) {
-	const { cid } = req.params;
+router.get('/:cid/:pn', function(req, res) {
+	const { cid, pn } = req.params;
 	axios.get(CATEGORY_URL, {
 		params: {
-			key: API_KEY,
+			key: process.env.MENU_API_KEY,
 			cid,
-			rn: 30
+			rn: 30,
+			pn: parseInt(pn)
 		}
 	}).then(response => {
 		if (!response.data.result) {
 			req.flash('error', '种类错误');
-			res.redirect('/');
+			res.redirect(req.originalUrl);
 		} else {
 			var steps = '';
 			for (let i = 0; i < response.data.result.data.length; i++) {
@@ -44,8 +45,8 @@ router.get('/:cid', function(req, res) {
 					
 				});
 				steps = '';
-				if (i === response.data.result.data.length-1) {
-					res.render('category', { data: response.data});
+				if (i === response.data.result.data.length - 1) {
+					res.render('category', { data: response.data, cid, pn: parseInt(pn), totalNum: Math.ceil(parseInt(response.data.result.totalNum)/30)});
 				}
 			}
 			// res.render('category', { data: response.data});

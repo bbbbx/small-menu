@@ -5,7 +5,7 @@ const path = require('path');
 
 const router = express.Router();
 const { User, Menu } = require('../models/index');
-const { PLEASE_SELECT_FILE, PLEASE_LOGIN, GENDER_ERROR, UPDATE_SUCCESS, QINIU_DOMAIN } = require('../utilities/const');
+const { PLEASE_LOGIN, GENDER_ERROR, UPDATE_SUCCESS, QINIU_DOMAIN } = require('../utilities/const');
 const upload = multer({ 
 	dest: 'uploads/',
 	limits: {

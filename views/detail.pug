@@ -12,22 +12,29 @@ block content
 						img(class="card-image-top" src=result.albums[0] style="width: 22rem; background-size: cover")
 					div(class="card-body")
 						h5(class="card-title") #{ result.title }
-						if currentUser
+						if currentUser && !collectDisabled
 							a(href=`/collect?userId=${currentUser.id}&menuId=${result.id}` class="btn btn-danger w-50")
 								img(src="/star.svg" alt="/star.svg" style="width: 2rem")
 								| &nbsp;
 								span(class="align-middle") 收藏
-						else
-							a(href=`/collect?userId=null&menuId=${result.id}` class="btn btn-danger w-50")
+						else if currentUser && collectDisabled
+							button(disabled class="btn btn-danger w-50")
+								//- a(href=`/collect?userId=null&menuId=${result.id}`)
 								img(src="/star.svg" alt="/star.svg" style="width: 2rem")
 								| &nbsp;
-								span(class="align-middle") 收藏
+								span(class="align-middle") 已收藏
+						else
+							button(disabled class="btn btn-danger w-50")
+								//- a(href=`/collect?userId=null&menuId=${result.id}`)
+								img(src="/star.svg" alt="/star.svg" style="width: 2rem")
+								| &nbsp;
+								span(class="align-middle") 登录后收藏
 			div(class="col-8")
 				h6 原料：#{ result.ingredients }
 				h6 佐料：#{ result.burden }
 				p #{ result.imtro }
 				- for (var i = 0; i < result.tags.split(';').length; i++)
-					span(class="badge badge-pill badge-info") #{ result.tags.split(';')[i] }
+					span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ result.tags.split(';')[i] }
 					| &nbsp;
 		hr
 		div(class="row")
