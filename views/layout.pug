@@ -166,11 +166,12 @@ html(lang="en")
                 a(class="dropdown-item" href="#") 小寒
                 a(class="dropdown-item" href="#") 大寒
             li(class="nav-item") 
-              a(class="nav-link" href="/menu") 所有菜谱
+              a(class="nav-link" href="/menu/0") 所有菜谱
             li(class="nav-item")
               a(class="nav-link" href="/user") 小当家们
           form(class="form-inline my-auto mr-2" action="/search" method="get")
             input(class="form-control mr-sm-2"  type="search" placeholder="请输入要搜索的菜名" aria-label="Search" name="foodName" required)
+            input(type="hidden" name="pn" value=0)
             button(class="btn btn-outline-success my-2 my-sm-0" type="submit") 搜索
           button(class="btn btn-outline-success mr-5" href="/user") 试试手气
 

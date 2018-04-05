@@ -176,6 +176,17 @@ router.get('/0', function(req, res) {
 router.get('/:id', function(req, res) {
 	const { id } = req.params;
 	res.locals.collections = [];
+	res.locals.followingDisabled = false;
+
+	if (req.session.user) {
+		req.session.user.following.map(value => {
+			console.log(value.id === parseInt(id));
+			if (value.id === parseInt(id)) {
+				res.locals.followingDisabled = true;
+			}
+		});
+	}
+
 	User.findById(id)
 		.then(user => {
 			if (!user) {

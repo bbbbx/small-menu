@@ -5,12 +5,19 @@ const { BASE_URL } = require('../utilities/const');
 const router = express.Router();
 
 router.get('/', function(req, res) {
-	const { foodName } = req.query;
+	const { foodName, pn } = req.query;
+
+	if (foodName === '' || pn === '' || typeof pn === 'undefined') {
+		req.flash('error', '参数错误！');
+		res.redirect('/');
+	}
 
 	axios.get(BASE_URL, {
 		params: {
 			key: process.env.MENU_API_KEY,
-			menu: foodName
+			menu: foodName,
+			rn: 30,
+			pn: parseInt(pn)
 		}
 	})
 		.then(response => {
@@ -49,7 +56,7 @@ router.get('/', function(req, res) {
 					});
 					steps = '';
 					if (i === response.data.result.data.length-1) {
-						res.render('seacher', { data: response.data });		
+						res.render('seacher', { data: response.data, foodName, pn: parseInt(pn), totalNum: parseInt(response.data.result.totalNum), totalNumPage: Math.ceil(parseInt(response.data.result.totalNum)/30)  });		
 					}
 				}
 			}

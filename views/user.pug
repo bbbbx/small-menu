@@ -30,7 +30,13 @@ block content
           if !currentUser.confirmed
             div(class="alert alert-danger" role="alert") 未验证邮箱，请尽快验证！验证后请重新登录
       div(class="col-3")
-        a(href=`/following?followingId=${currentUser.id}` class="btn btn-primary w-75") 关注
+        //- a(href=`/following?followingId=${currentUser.id}` class="btn btn-primary w-75") 关注
+        if currentUser && !followingDisabled
+          a(href=`/following?followingId=${currentUser.id}` class="btn btn-primary w-75") 关注
+        else if currentUser && followingDisabled
+          button(disabled class="btn btn-primary w-75") 已关注
+        else
+          button(disabled class="btn btn-primary w-75") 登录后关注
     hr
     div(class="row text-center")
       div(class="col")
@@ -68,12 +74,22 @@ block content
           div(class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab") 
             div(class="card-columns mt-4")
               if currentUser.following.length > 0
-                - for (let i = 0; i < currentUser.following.length; i++)
+                - for (let j = 0; j < currentUser.following.length; j++)
                   div(class="card")
-                    img(class="card-img-top" src=currentUser.following[i].avatar alt="currentUser.following[i].avatar")
+                    img(class="card-img-top" src=currentUser.following[j].avatar alt="currentUser.following[j].avatar")
                     div(class="card-body")
-                      h5(class="card-title") #{ currentUser.following[i].username }
-                      a(class="btn btn-success" href=`/user/${currentUser.following[i].id}`) 查看
+                      h5(class="card-title") #{ currentUser.following[j].username }
+                      //- a(class="btn btn-success" href=`/user/${currentUser.following[i].id}`) 查看
+                      div(class="row")
+                        if removeVisiable
+                          div(class="col")
+                            a(href=`/user/${currentUser.following[j].id}` class="btn btn-success") 查看
+                          div(class="col")
+                            input(id=`following${j}` type="hidden" name="followingId" value=currentUser.following[j].id)
+                            input(id=`removeFollowing${j}` type="button" class="btn btn-danger" value="取消关注" onclick='$.ajax({url: "http://localhost:3000/following", method: "DELETE", data: { userId: ' + currentUser.id + ', followingId: ' + currentUser.following[j].id + '} } ).done(function() { $("#removeFollowing' + j + '").parent().parent().parent().parent().remove(); });')
+                        else
+                          div(class="col")
+                            a(href=`/user/${currentUser.following[j].id}` class="btn btn-success") 查看
               else
                 p 没有关注的人
 

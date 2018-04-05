@@ -1,15 +1,11 @@
 const express = require('express');
 const multer  = require('multer');
 const upload = multer();
-const { User, Captcha, Menu, UserMenu, Comment } = require('../models/index');
+const { User, Captcha, Menu, UserMenu, Comment, UserFollowing, UserFollowers } = require('../models/index');
+const { PLEASE_LOGIN } = require('../utilities/const');
 const router = express.Router();
 
 router.get('/', function(req, res) {
-	// if (req.isAuthenticated()) {
-	// 	res.render('index', { currentUser: req.user });
-	// } else {
-	// 	res.render('index');
-	// }
 	if (req.session.user) {
 		res.locals.currentUser = req.session.user;
 	}
@@ -63,14 +59,15 @@ router.get('/confirmEmail', function(req, res) {
 
 router.get('/collect', function(req, res) {
 	const { userId, menuId } = req.query;
+
 	if (req.session.user) {
-		User.findOne({where: { id: userId}})
+		User.findOne({where: { id: parseInt(userId)}})
 			.then(user => {
 				if (!user) {
 					req.flash('error', '用户不存在！');
 					res.redirect('/');
 				}
-				Menu.findOne({where: {id: menuId}})
+				Menu.findOne({where: {id: parseInt(menuId)}})
 					.then(menu => {
 						if (!menu) {
 							req.flash('error', '菜谱不存在！');
@@ -113,11 +110,10 @@ router.delete('/usermenus', function(req, res) {
 			}
 		}).then(userMenu => {
 			if (!userMenu) {
-				req.flash('error', '收藏不存在！');
 				res.send('收藏不存在！');
 				// res.redirect('/');
 			} else {
-				userMenu.destroy().then(userMenu => {
+				userMenu.destroy().then(() => {
 					// req.flash('info', '移除成功');
 					res.end();
 					// res.redirect(200, '/user');
@@ -132,7 +128,50 @@ router.delete('/usermenus', function(req, res) {
 	} else {
 		// req.flash('error', '请先登录！');
 		// res.redirect('/login');
-		res.send('请先登录！');
+		res.send(PLEASE_LOGIN);
+	}
+});
+
+router.delete('/following', function(req, res) {
+	const { followingId } = req.body;
+
+	if (res.locals.currentUser) {
+		UserFollowing.findOne({
+			where: {
+				userId: res.locals.currentUser.id,
+				FollowingId: parseInt(followingId)
+			}
+		}).then(userFollowing => {
+			if (!userFollowing) {
+				res.send('用户不存在！');
+			} else {
+				userFollowing.destroy().then(() => {
+					UserFollowers.findOne({
+						where: {
+							userId: parseInt(followingId),
+							FollowerId: res.locals.currentUser.id
+						}
+					}).then(userFollowers => {
+						userFollowers.destroy().then(() => {
+							req.session.user.followers.map((value, index) => {
+								if (value.id === res.locals.currentUser.id) {
+									req.session.user.followers.splice(index, 1);
+								}
+							});
+							req.session.user.following.map((value, index) => {
+								if (value.id === parseInt(followingId)) {
+									req.session.user.following.splice(index, 1);
+								}
+							});
+							res.end();
+						});
+					});
+					
+				});
+			}
+		});
+	} else {
+		res.send(PLEASE_LOGIN);
 	}
 });
 

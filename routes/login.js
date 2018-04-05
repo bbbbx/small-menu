@@ -37,16 +37,17 @@ router.post('/', function(req, res) {
 
 							user.getFollowing().then(followings => {
 								followings.map(value => {
-									req.session.user.following.push(value);
+									req.session.user.following.push(value.dataValues);
 								});
 								user.getFollowers().then(followers => {
 									followers.map(value => {
-										req.session.user.followers.push(value);
+										req.session.user.followers.push(value.dataValues);
 									});
 									user.getMenus().then(menus => {
 										menus.map(value => {
-											req.session.user.collections.push(value);
+											req.session.user.collections.push(value.dataValues);
 										});
+										console.log(req.session.user);
 										res.redirect('/');
 									});
 								});

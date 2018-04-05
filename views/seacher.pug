@@ -2,6 +2,8 @@ extends layout
 
 block content
   div(class="container")
+    h4(class="text-center") 共有 #{ totalNum } 个结果
+    hr
     div(class="card-columns")
       - for (var i = 0; i < data.result.data.length; i++)
         div(class="card")
@@ -9,14 +11,60 @@ block content
           div(class="card-body")
             a(href=`/detail/${data.result.data[i].id}`)
               h5(class="card-title") #{data.result.data[i].title}
-            p(class="card-text") #{ data.result.data[i].imtro }
+            //- p(class="card-text") #{ data.result.data[i].imtro }
+            - for (var j = 0; j < data.result.data[i].tags.split(';').length; j++)
+              span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ data.result.data[i].tags.split(';')[j] }
+              | &nbsp;
+    hr
+    nav(aria-label="Page navigation example")
+      ul(class="pagination justify-content-center")
+        if pn === 0
+          li(class="page-item disabled")
+            a(class="page-link" href=`/search?foodName=${foodName}&pn=${pn}` tabindex="-1") 上一页
+        else
+          li(class="page-item")
+            a(class="page-link" href=`/search?foodName=${foodName}&pn=${pn - 30}` tabindex="-1") 上一页
 
-      //- div(id="accordion")
-      //-   div(class="card")
-      //-     div(class="card-header" id=`heading${i}`)
-      //-       h5(class="mb-0")
-      //-         button(class="btn btn-link" data-toggle="collapse" data-target=`#collapse${i}` aria-expanded="true" aria-controls=`collapse${i}`) #{data.result.data[i].title}
-      //-     div(id=`collapse${i}` class="collapse show" aria-labelledby=`heading${i}` data-parent="#accordion")
-      //-       div(class="card-body")
-      //-         img(src=data.result.data[i].albums[0])
-      //-         p #{ data.result.data[i].imtro }
+        if totalNumPage >= 20
+          if pn < 90
+            - for (var k = 0; k < 5; k++)
+              if pn/30 === k
+                li(class="page-item active")
+                  a(class="page-link" href=`/search?foodName=${foodName}&pn=${k * 30}`) #{ k+1 }
+                    span(class="sr-only") (current)
+              else
+                li(class="page-item")
+                  a(class="page-link" href=`/search?foodName=${foodName}&pn=${k * 30}`) #{ k+1 }
+          else
+            li(class="page-item")
+              a(class="page-link" href=`/search?foodName=${foodName}&pn=0`) 1
+            li(class="page-item disabled")
+              a(class="page-link" href=`#`) ...  
+            - for (var j = pn/30-2; j < (pn/30+3 > totalNumPage? totalNumPage: pn/30+3) ; j++)
+              if pn/30 === j
+                li(class="page-item active")
+                  a(class="page-link" href=`/search?foodName=${foodName}&pn=${j * 30}`) #{ j+1 }
+                    span(class="sr-only") (current)
+              else
+                li(class="page-item")
+                  a(class="page-link" href=`/search?foodName=${foodName}&pn=${j * 30}`) #{ j+1 }    
+          li(class="page-item disabled")
+            a(class="page-link" href=`#`) ...  
+          li(class="page-item")
+            a(class="page-link" href=`/search?foodName=${foodName}&pn=${(totalNumPage-1)* 30}`) #{ totalNumPage }
+        else
+          - for (var i = 0; i < totalNumPage; i++)
+            if pn/30 === i
+              li(class="page-item active")
+                a(class="page-link" href=`/search?foodName=${foodName}&pn=${i * 30}`) #{ i+1 }
+                  span(class="sr-only") (current)
+            else
+              li(class="page-item")
+                a(class="page-link" href=`/search?foodName=${foodName}&pn=${i * 30}`) #{ i+1 }    
+
+        if pn === (i-1) * 30
+          li(class="page-item disabled")
+            a(class="page-link" href="#") 下一页
+        else
+          li(class="page-item")
+            a(class="page-link" href=`/search?foodName=${foodName}&pn=${pn + 30}`) 下一页

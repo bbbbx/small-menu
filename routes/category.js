@@ -46,7 +46,7 @@ router.get('/:cid/:pn', function(req, res) {
 				});
 				steps = '';
 				if (i === response.data.result.data.length - 1) {
-					res.render('category', { data: response.data, cid, pn: parseInt(pn), totalNum: Math.ceil(parseInt(response.data.result.totalNum)/30)});
+					res.render('category', { data: response.data, cid, pn: parseInt(pn), totalNum: parseInt(response.data.result.totalNum), totalNumPage: Math.ceil(parseInt(response.data.result.totalNum)/30)});
 				}
 			}
 			// res.render('category', { data: response.data});

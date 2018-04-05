@@ -2,7 +2,60 @@ extends layout
 
 block content
   div(class="container")
-    h3(class="text-center my-4") 共有 #{ menus.length } 个记录
+    nav(aria-label="Page navigation example")
+      ul(class="pagination justify-content-center")
+        if offset === 0
+          li(class="page-item disabled")
+            a(class="page-link" href=`/menu/${offset}` tabindex="-1") 上一页
+        else
+          li(class="page-item")
+            a(class="page-link" href=`/menu/${offset-100}` tabindex="-1") 上一页
+
+        if totalNumPage >= 20
+          if offset < 300
+            - for (var k = 0; k < 5; k++)
+              if k === offset/100
+                li(class="page-item active")
+                  a(class="page-link" href=`/menu/${k * 100}`) #{ k+1 }
+                    span(class="sr-only") (current)
+              else
+                li(class="page-item")
+                  a(class="page-link" href=`/menu/${k * 100}`) #{ k+1 }
+          else
+            li(class="page-item")
+              a(class="page-link" href=`/menu/0`) 1
+            li(class="page-item disabled")
+              a(class="page-link" href=`#`) ...  
+            - for (var j = offset/100-2; j < (offset/100+3 > totalNumPage? totalNumPage: offset/100+3) ; j++)
+              if  j === offset/100
+                li(class="page-item active")
+                  a(class="page-link" href=`/menu/${j * 100}`) #{ j+1 }
+                    span(class="sr-only") (current)
+              else
+                li(class="page-item")
+                  a(class="page-link" href=`/menu/${j * 100}`) #{ j+1 }    
+          li(class="page-item disabled")
+            a(class="page-link" href=`#`) ...  
+          li(class="page-item")
+            a(class="page-link" href=`/menu/${(totalNumPage-1)* 100}`) #{ totalNumPage }
+        else
+          - for (var i = 0; i < totalNumPage; i++)
+            if i === offset / 100
+              li(class="page-item active")
+                a(class="page-link" href=`/menu/${i * 100}`) #{ i+1 }
+                  span(class="sr-only") (current)
+            else
+              li(class="page-item")
+                a(class="page-link" href=`/menu/${i * 100}`) #{ i+1 }    
+
+        if offset === (i-1) * 100
+          li(class="page-item disabled")
+            a(class="page-link" href="#") 下一页
+        else
+          li(class="page-item")
+            a(class="page-link" href=`/menu/${offset + 100}`) 下一页
+    hr
+    h3(class="text-center my-4") 共有 #{ totalMenusNum } 个菜谱
     div(class="card-columns")
       - for (var i = 0; i < menus.length; i++)
         div(class="card")
@@ -15,3 +68,56 @@ block content
             - for (var j = 0; j < menus[i].tags.split(';').length; j++)
               span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ menus[i].tags.split(';')[j] }
               | &nbsp;
+    hr
+    nav(aria-label="Page navigation example")
+      ul(class="pagination justify-content-center")
+        if offset === 0
+          li(class="page-item disabled")
+            a(class="page-link" href=`/menu/${offset}` tabindex="-1") 上一页
+        else
+          li(class="page-item")
+            a(class="page-link" href=`/menu/${offset-100}` tabindex="-1") 上一页
+
+        if totalNumPage >= 20
+          if offset < 300
+            - for (var k = 0; k < 5; k++)
+              if k === offset/100
+                li(class="page-item active")
+                  a(class="page-link" href=`/menu/${k * 100}`) #{ k+1 }
+                    span(class="sr-only") (current)
+              else
+                li(class="page-item")
+                  a(class="page-link" href=`/menu/${k * 100}`) #{ k+1 }
+          else
+            li(class="page-item")
+              a(class="page-link" href=`/menu/0`) 1
+            li(class="page-item disabled")
+              a(class="page-link" href=`#`) ...  
+            - for (var j = offset/100-2; j < (offset/100+3 > totalNumPage? totalNumPage: offset/100+3) ; j++)
+              if  j === offset/100
+                li(class="page-item active")
+                  a(class="page-link" href=`/menu/${j * 100}`) #{ j+1 }
+                    span(class="sr-only") (current)
+              else
+                li(class="page-item")
+                  a(class="page-link" href=`/menu/${j * 100}`) #{ j+1 }    
+          li(class="page-item disabled")
+            a(class="page-link" href=`#`) ...  
+          li(class="page-item")
+            a(class="page-link" href=`/menu/${(totalNumPage-1)* 100}`) #{ totalNumPage }
+        else
+          - for (var i = 0; i < totalNumPage; i++)
+            if i === offset / 100
+              li(class="page-item active")
+                a(class="page-link" href=`/menu/${i * 100}`) #{ i+1 }
+                  span(class="sr-only") (current)
+            else
+              li(class="page-item")
+                a(class="page-link" href=`/menu/${i * 100}`) #{ i+1 }    
+
+        if offset === (i-1) * 100
+          li(class="page-item disabled")
+            a(class="page-link" href="#") 下一页
+        else
+          li(class="page-item")
+            a(class="page-link" href=`/menu/${offset + 100}`) 下一页

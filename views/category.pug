@@ -2,6 +2,8 @@ extends layout
 
 block content
   div(class="container")
+    h4(class="text-center") 共有 #{ totalNum } 个结果
+    hr
     div(class="card-columns")
       - for (var i = 0; i < data.result.data.length; i++)
         div(class="card")
@@ -22,14 +24,25 @@ block content
         else
           li(class="page-item")
             a(class="page-link" href=`/category/${cid}/${pn - 30}` tabindex="-1") 上一页
-        - for (var i = 0; i < totalNum; i++)
-          if pn/30 === i
-            li(class="page-item active")
-              a(class="page-link" href=`/category/${cid}/${i * 30}`) #{ i+1 }
-                span(class="sr-only") (current)
-          else
-            li(class="page-item")
-              a(class="page-link" href=`/category/${cid}/${i * 30}`) #{ i+1 }    
+        if totalNumPage >= 20
+          - for (var j = pn/30-2; j < (pn/30+3 > totalNumPage? totalNumPage: pn/30+3); j++)
+            if pn/30 === j
+              li(class="page-item active")
+                a(class="page-link" href=`/category/${cid}/${pn}`) #{ j+1 }
+                  span(class="sr-only") (current)
+            else
+              li(class="page-item")
+                a(class="page-link" href=`/category/${cid}/${j * 30}`) #{ j+1 }    
+        else
+          - for (var i = 0; i < totalNumPage; i++)
+            if pn/30 === i
+              li(class="page-item active")
+                a(class="page-link" href=`/category/${cid}/${i * 30}`) #{ i+1 }
+                  span(class="sr-only") (current)
+            else
+              li(class="page-item")
+                a(class="page-link" href=`/category/${cid}/${i * 30}`) #{ i+1 }    
+
         if pn === (i-1) * 30
           li(class="page-item disabled")
             a(class="page-link" href="#") 下一页
