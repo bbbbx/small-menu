@@ -1,4 +1,6 @@
 const express = require('express');
+const multer  = require('multer');
+const upload = multer();
 const { User, Captcha, Menu, UserMenu, Comment } = require('../models/index');
 const router = express.Router();
 
@@ -61,7 +63,7 @@ router.get('/confirmEmail', function(req, res) {
 
 router.get('/collect', function(req, res) {
 	const { userId, menuId } = req.query;
-	if (req.session.user || req.isAuthenticated()) {
+	if (req.session.user) {
 		User.findOne({where: { id: userId}})
 			.then(user => {
 				if (!user) {
@@ -166,16 +168,16 @@ router.get('/following', function(req, res) {
 	}
 });
 
-router.get('/comment', function(req, res) {
-	const { commentContent, menuId } = req.query;
-	if (commentContent === '') {
-		req.flash('error', '评论不能为空');
-		res.redirect(`/detail/${menuId}`);
-		res.end();
-	} else if (!req.session.user) {
+router.post('/comment', upload.array(), function(req, res) {
+	const { commentContent, menuId } = req.body;
+	if (!req.session.user) {
 		req.flash('error', '请先登录！');
 		res.redirect('/login');
-	} else {
+	} else if (commentContent === '') {
+		req.flash('error', '评论不能为空');
+		res.redirect(`/detail/${menuId}`);
+		// res.end();
+	} else { 
 		Comment.create({
 			content: commentContent,
 			userId: req.session.user.id,

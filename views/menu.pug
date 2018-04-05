@@ -6,7 +6,8 @@ block content
     div(class="card-columns")
       - for (var i = 0; i < menus.length; i++)
         div(class="card")
-          img(class="card-img-top" src=menus[i].albums alt="menus[i].albums")
+          a(href=`/detail/${menus[i].id}`)
+            img(class="card-img-top" src=menus[i].albums alt="menus[i].albums")
           div(class="card-body")
             a(href=`/detail/${menus[i].id}`)
               h5(class="card-title") #{menus[i].title}

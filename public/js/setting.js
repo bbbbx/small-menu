@@ -44,7 +44,11 @@ function updateImageDisplay() {
 		// for(var i = 0; i < curFiles.length; i++) {
 		// var listItem = document.createElement('li');
 		var para = document.createElement('p');
-		if(validFileType(curFiles[0])) {
+		if (curFiles[0].size > 1024 * 1024) {
+			swal('文件大于 1 MB！请重新选择');
+			para.textContent = '文件大于 1 MB！请重新选择';
+			avatarPreview.appendChild(para);
+		} else if (validFileType(curFiles[0])) {
 			para.textContent = '文件名 ' + curFiles[0].name + '；文件大小 ' + returnFileSize(curFiles[0].size) + '。';
 			var image = document.createElement('img');
 			image.src = window.URL.createObjectURL(curFiles[0]);

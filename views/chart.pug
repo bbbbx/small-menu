@@ -5,16 +5,15 @@ block content
     div(class="card-columns")
       - for (let i = 0; i < users.length; i++)
         div(class="card")
-          img(class="card-img-top" src=users[i].avatar alt="Card image cap")
+          a(href=`/user/${users[i].id}` class="")
+            img(class="rounded card-img-top" src=users[i].avatar alt="Card image cap")
           div(class="card-body")
-            h5(class="card-title") #{ users[i].username } &nbsp;
+            a(href=`/user/${users[i].id}` class="")
+              h5(class="card-title") #{ users[i].username } &nbsp;
             p(class="card-text") #{ users[i].intro }
             p
               | 关注：
               span(class="text-info") #{ users[i].following } &nbsp;&nbsp; 
               | 粉丝：
               span(class="text-info") #{ users[i].followers }
-            //- p(class="card-text")
-            //-   small(class="text-muted") #{ users[i].updatedAt }
-            a(href=`/user/${users[i].id}` class="btn btn-success") 查看
         

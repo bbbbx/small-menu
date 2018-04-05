@@ -5,14 +5,18 @@ const PORT = 3000;
 const HOSTNAME = 'http://localhost';
 const CLOUD_HOSTNAME = 'http://smallmenu.venusworld.cn';
 
-const AVATAR_BOY = 'http://ohjn9v8nd.bkt.clouddn.com/boy.png';
-const AVATAR_GIRL = 'http://ohjn9v8nd.bkt.clouddn.com/girl.png';
+const QINIU_DOMAIN = 'http://p6evonvn0.bkt.clouddn.com/';
+const AVATAR_BOY = 'http://p6evonvn0.bkt.clouddn.com/cooker_boy.png';
+const AVATAR_GIRL = 'http://p6evonvn0.bkt.clouddn.com/cooker_girl.png';
 
 const PLEASE_LOGIN = '请先登录！';
 const GENDER_ERROR = '性别有误！';
 const UPDATE_SUCCESS = '更新成功';
+const PLEASE_SELECT_FILE = '请选择文件！';
 
 module.exports = {
+	PLEASE_SELECT_FILE,
+	QINIU_DOMAIN,
 	BASE_URL,
 	CATEGORY_URL,
 	API_KEY,

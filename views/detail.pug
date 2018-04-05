@@ -46,7 +46,7 @@ block content
 			div(class="row" id="commentForm")
 				div(class="col-2")
 				div(class="col-8")
-					form(action="/comment" method="GET")
+					form(action="/comment" method="POST" enctype="multipart/form-data")
 						input(type="hidden" value=result.id name="menuId")
 						div(class="form-group")
 							label(for="comment-content")

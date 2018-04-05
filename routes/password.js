@@ -8,27 +8,20 @@ const saltRounds = 10;
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 router.get('/', function(req, res) {
-	const captcha = svgCaptcha.create();
-	req.session.captcha = captcha.text;
-	res.locals.captcha = captcha;
 	res.render('password');
 });
 
 router.post('/', function(req, res) {
-	const { account, email, emailCaptcha, captcha, password, passwordConfirm } = req.body;
+	const { account, email, emailCaptcha, password, passwordConfirm } = req.body;
 	const CAPTCHA = Math.floor(100000 + Math.random() * 899999);
-	const SVGCaptcha = svgCaptcha.create();
-
-	req.session.captcha = SVGCaptcha.text;
-	res.locals.captcha = SVGCaptcha;
-
-	if (captcha !== req.session.captcha) {
-		req.flash('error', '验证码错误！注意区分大小写');
-		res.redirect('/password');
-	} else if (password !== passwordConfirm) {
+	
+	if (password !== passwordConfirm) {
 		req.flash('error', '两次密码不一致！');
 		res.redirect('/password');
-	} else if (emailCaptcha === '' && captcha === req.session.captcha) {
+	} else if (emailCaptcha === '') {
+		const SVGCaptcha = svgCaptcha.create();
+		req.session.captcha = SVGCaptcha.text;
+		res.locals.captcha = SVGCaptcha;
 		User.findOne({ where: { account, email }})
 			.then(user => {
 				if (user) {

@@ -9,7 +9,7 @@ block content
     div(class="row")
       div(class="col")
       div(class="col")
-        form(action="/user/setting" method="post")
+        form(action="/user/setting" method="post" enctype="multipart/form-data")
           label(for="username") 用户名
           input(class="form-control" type="text" name="username" id="username" value=currentUser.username)
           hr

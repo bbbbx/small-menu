@@ -1,3 +1,4 @@
+require('dotenv').load();
 const http = require('http');
 const express = require('express');
 const path = require('path');
@@ -7,8 +8,6 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
-const passport = require('passport');
-const setUpPassport = require('./setuppassport');
 const { PORT } = require('./utilities/const');
 
 const index = require('./routes/index');
