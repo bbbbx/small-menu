@@ -61,34 +61,33 @@ router.get('/collect', function(req, res) {
 	const { userId, menuId } = req.query;
 
 	if (req.session.user) {
-		User.findOne({where: { id: parseInt(userId)}})
+		User.findById(parseInt(userId))
 			.then(user => {
 				if (!user) {
 					req.flash('error', '用户不存在！');
 					res.redirect('/');
-				}
-				Menu.findOne({where: {id: parseInt(menuId)}})
-					.then(menu => {
-						if (!menu) {
-							req.flash('error', '菜谱不存在！');
-							res.redirect('/');
+				} else {
+					user.getMenus().then(menus => {
+						for ( let i = 0; i < menus.length; i++) {
+							if (parseInt(menuId) === menus[i].id) {
+								req.flash('error', '已收藏！');
+								res.redirect(`/detail/${menuId}`);
+							}
 						}
-						user.getMenus().then(menus => {
-							menus.map((value, index) => {
-								if (menuId === value.id) {
-									req.flash('error', '已收藏！');
+						Menu.findById(parseInt(menuId)).then(menu => {
+							if (!menu) {
+								req.flash('error', '菜谱不存在！');
+								res.redirect('/');
+							} else {
+								user.addMenu(menu).then(() => {
+									req.flash('info', '收藏成功');
+									req.session.user.collections.push(menu);
 									res.redirect(`/detail/${menuId}`);
-								}
-								if (index == menus.length - 1) {
-									user.addMenu(menu).then(() => {
-										req.flash('info', '收藏成功');
-										req.session.user.collections.push(menu);
-										res.redirect(`/detail/${menuId}`);
-									});
-								}
-							});
+								});	
+							}
 						});
 					});
+				}
 			});
 	} else if (userId === '' || typeof userId === 'undefined' || menuId === '' || typeof menuId === 'undefined') {
 		req.flash('error', '参数错误！');
@@ -111,12 +110,15 @@ router.delete('/usermenus', function(req, res) {
 		}).then(userMenu => {
 			if (!userMenu) {
 				res.send('收藏不存在！');
-				// res.redirect('/');
 			} else {
 				userMenu.destroy().then(() => {
-					// req.flash('info', '移除成功');
+					
+					req.session.user.collections.map((value, index) => {
+						if (parseInt(menuId) === value.id) {
+							req.session.user.collections.splice(index, 1);
+						}
+					});
 					res.end();
-					// res.redirect(200, '/user');
 				});
 				// req.flash('info', '移除成功');
 				// res.redirect(200, '/user');
@@ -126,8 +128,6 @@ router.delete('/usermenus', function(req, res) {
 			}
 		});
 	} else {
-		// req.flash('error', '请先登录！');
-		// res.redirect('/login');
 		res.send(PLEASE_LOGIN);
 	}
 });
@@ -166,7 +166,6 @@ router.delete('/following', function(req, res) {
 							res.end();
 						});
 					});
-					
 				});
 			}
 		});
@@ -225,7 +224,6 @@ router.post('/comment', upload.array(), function(req, res) {
 	} else if (commentContent === '') {
 		req.flash('error', '评论不能为空');
 		res.redirect(`/detail/${menuId}`);
-		// res.end();
 	} else { 
 		Comment.create({
 			content: commentContent,
