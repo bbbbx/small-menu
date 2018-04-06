@@ -20,6 +20,8 @@ const Menu = sequelize.import('./menu');
 const User = sequelize.import('./user');
 const Captcha = sequelize.import('./captcha');
 const Comment = sequelize.import('./comment');
+const Article = sequelize.import('./article');
+const ArticleComment = sequelize.import('./articleComment');
 const UserMenu = sequelize.import('./userMenu');
 const UserFollowers = sequelize.import('./userFollowers');
 const UserFollowing = sequelize.import('./userFollowing');
@@ -35,6 +37,12 @@ Menu.belongsToMany(User, { through: UserMenu});
 User.hasMany(Comment);
 Menu.hasMany(Comment);
 
+Article.belongsTo(User);						// 文章作者
+Article.hasMany(ArticleComment);
+User.hasMany(ArticleComment);
+Article.belongsToMany(User, { through: 'UserArticle' });		// 文章收藏者
+User.belongsToMany(Article, { through: 'UserArticle' });		// 文章收藏者
+
 sequelize.sync();
 
 module.exports = {
@@ -42,6 +50,8 @@ module.exports = {
 	Captcha,
 	Menu,
 	Comment,
+	Article,
+	ArticleComment,
 	UserMenu,
 	UserFollowing,
 	UserFollowers
