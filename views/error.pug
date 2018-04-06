@@ -1,6 +1,10 @@
 extends layout
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  div(class="container")
+    h1(class="text-center text-danger")= message
+    h2(class="text-center text-danger")
+      img(src="/svg/program-error.svg" alt="/svg/program-error.svg" style="width: 2.5rem")
+      | &nbsp;
+      = error.status
+    //- pre #{error.stack}

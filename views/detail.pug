@@ -11,27 +11,35 @@ block content
 					else
 						img(class="card-image-top" src=result.albums[0] style="width: 22rem; background-size: cover")
 					div(class="card-body")
-						h5(class="card-title") #{ result.title }
+						h5(class="card-title") 
+							img(src="/svg/tray.svg" alt="/svg/tray.svg" style="width: 1.5rem")
+							| &nbsp;
+							!= result.title 
 						if currentUser && !collectDisabled
 							a(href=`/collect?userId=${currentUser.id}&menuId=${result.id}` class="btn btn-danger w-50")
-								img(src="/star.svg" alt="/star.svg" style="width: 2rem")
+								img(src="/svg/review.svg" alt="/svg/review.svg" style="width: 2rem")
 								| &nbsp;
 								span(class="align-middle") 收藏
 						else if currentUser && collectDisabled
 							button(disabled class="btn btn-danger w-50")
 								//- a(href=`/collect?userId=null&menuId=${result.id}`)
-								img(src="/star.svg" alt="/star.svg" style="width: 2rem")
+								img(src="/svg/review.svg" alt="/svg/review.svg" style="width: 2rem")
 								| &nbsp;
 								span(class="align-middle") 已收藏
 						else
 							button(disabled class="btn btn-danger w-50")
 								//- a(href=`/collect?userId=null&menuId=${result.id}`)
-								img(src="/star.svg" alt="/star.svg" style="width: 2rem")
+								img(src="/svg/review.svg" alt="/svg/review.svg" style="width: 2rem")
 								| &nbsp;
 								span(class="align-middle") 登录后收藏
 			div(class="col-8")
-				h6 原料：#{ result.ingredients }
-				h6 佐料：#{ result.burden }
+				h6 
+					img(src="/svg/ingredient.svg" alt="/svg/ingredient.svg" style="width: 1.5rem")
+					| &nbsp;&nbsp;原料：#{ result.ingredients }
+				h6
+					img(src="/svg/salt-and-pepper.svg" alt="/svg/salt-and-pepper.svg" style="width: 1.5rem")
+					| &nbsp;&nbsp;佐料：#{ result.burden }
+				hr
 				p #{ result.imtro }
 				- for (var i = 0; i < result.tags.split(';').length; i++)
 					span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ result.tags.split(';')[i] }
@@ -57,7 +65,9 @@ block content
 						input(type="hidden" value=result.id name="menuId")
 						div(class="form-group")
 							label(for="comment-content")
-								h4 吐个槽？
+								h4
+									img(src="/svg/chat.svg" alt="/svg/chat.svg" style="width: 2rem") 
+									| &nbsp;吐个槽？
 							textarea(type="text" class="form-control" id="comment-content" name="commentContent")
 						input(class="btn btn-primary" type="submit" value="发表评论" )
 				div(class="col-2")
