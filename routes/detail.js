@@ -7,12 +7,11 @@ router.get('/:id', function(req, res) {
 	res.locals.collectDisabled = false;
 	
 	if (req.session.user) {
-		req.session.user.collections.map(value => {
-			console.log(value.id === parseInt(id));
-			if (value.id === parseInt(id)) {
+		for (let i = 0; i < req.session.user.collections.length; i++) {
+			if (req.session.user.collections[i].id === parseInt(id)) {
 				res.locals.collectDisabled = true;
 			}
-		});
+		}
 	}
 
 	Menu.findOne({ where: { id }})
