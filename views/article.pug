@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  div(class="container")
+    h2(class="text-center text-info") 所有文章
+    div(class="card-columns")
+      - for (var i = 0; i < articles.length; i++)
+        div(class="card")
+          a(href=`/article/${articles[i].id}`)
+            img(class="card-img-top" src=articles[i].album alt="articles[i].album")
+          div(class="card-body")
+            a(href=`/article/${articles[i].id}`)
+              h5(class="card-title") #{articles[i].title}
+            - for (var j = 0; j < articles[i].tags.split(';').length; j++)
+              span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ articles[i].tags.split(';')[j] }
+              | &nbsp;

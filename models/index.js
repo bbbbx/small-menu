@@ -38,8 +38,8 @@ User.hasMany(Comment);
 Menu.hasMany(Comment);
 
 Article.belongsTo(User);						// 文章作者
-Article.hasMany(ArticleComment);
-User.hasMany(ArticleComment);
+Article.hasMany(ArticleComment);		// 文章评论
+User.hasMany(ArticleComment);				// 文章评论
 Article.belongsToMany(User, { through: 'UserArticle' });		// 文章收藏者
 User.belongsToMany(Article, { through: 'UserArticle' });		// 文章收藏者
 

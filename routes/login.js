@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const svgCaptcha = require('svg-captcha');
-const { User } = require('../models/index');
+const { User, Article } = require('../models/index');
 const router = express.Router();
 
 router.get('/', function(req, res) {
@@ -34,6 +34,9 @@ router.post('/', function(req, res) {
 							req.session.user.following = [];
 							req.session.user.followers = [];
 							req.session.user.collections = [];
+							req.session.user.collectedArticles = [];
+							req.session.user.articles = [];
+							req.session.user.articleComments = [];
 
 							user.getFollowing().then(followings => {
 								followings.map(value => {
@@ -47,8 +50,26 @@ router.post('/', function(req, res) {
 										menus.map(value => {
 											req.session.user.collections.push(value.dataValues);
 										});
-										console.log(req.session.user);
-										res.redirect('/');
+										user.getArticles().then(collectedArticles => {
+											collectedArticles.map(value => {
+												req.session.user.collectedArticles.push(value.dataValues);
+											});
+											Article.findAll({
+												where: { userId: req.session.user.id}
+											}).then(articles => {
+												articles.map(value => {
+													req.session.user.articles.push(value.dataValues);
+												});
+												user.getArticleComments().then(articleComments => {
+													articleComments.map(value => {
+														req.session.user.articleComments.push(value.dataValues);
+													});
+													console.log(req.session.user);
+													res.redirect('/');
+												});
+											});
+										});
+
 									});
 								});
 							});

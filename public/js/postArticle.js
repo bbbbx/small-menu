@@ -1,5 +1,5 @@
-var avatarInput = document.querySelector('#avatar');
-var avatarPreview = document.querySelector('#avatarPreview');
+var album = document.querySelector('#album');
+var albumPreview = document.querySelector('#albumPreview');
 
 var fileTypes = [
 	'image/jpeg',
@@ -7,7 +7,7 @@ var fileTypes = [
 	'image/png'
 ];
 
-avatarInput.style.opacity = 0;
+album.style.opacity = 0;
 
 function validFileType(file) {
 	for(var i = 0; i < fileTypes.length; i++) {
@@ -29,15 +29,15 @@ function returnFileSize(number) {
 }
 
 function updateImageDisplay() {
-	while (avatarPreview.firstChild) {
-		avatarPreview.removeChild(avatarPreview.firstChild);
+	while (albumPreview.firstChild) {
+		albumPreview.removeChild(albumPreview.firstChild);
 	}
 	
-	var curFiles = avatarInput.files;
+	var curFiles = album.files;
 	if (curFiles.length === 0) {
 		var para = document.createElement('p');
 		para.innerText = '未选择文件';
-		avatarPreview.appendChild(para);
+		albumPreview.appendChild(para);
 	} else {
 		// var list = document.createElement('ol');
 		// avatarPreview.appendChild(list);
@@ -47,23 +47,42 @@ function updateImageDisplay() {
 		if (curFiles[0].size > 1024 * 1024) {
 			swal('文件大于 1 MB！请重新选择');
 			para.textContent = '文件大于 1 MB！请重新选择';
-			avatarPreview.appendChild(para);
+			albumPreview.appendChild(para);
 		} else if (validFileType(curFiles[0])) {
-			para.textContent = '文件名 ' + curFiles[0].name + '；文件大小 ' + returnFileSize(curFiles[0].size) + '。';
+			para.textContent = curFiles[0].name + '，文件大小：' + returnFileSize(curFiles[0].size) + '。';
 			var image = document.createElement('img');
 			image.src = window.URL.createObjectURL(curFiles[0]);
 			image.style.width = '18rem';
 			
-			avatarPreview.appendChild(image);
-			avatarPreview.appendChild(para);
+			albumPreview.appendChild(image);
+			albumPreview.appendChild(para);
 
 		} else {
-			para.textContent = '文件名 ' + curFiles[0].name + '：不是一个合法的文件，请重新选择！';
-			avatarPreview.appendChild(para);
+			para.textContent = curFiles[0].name + '：不是一个合法的文件，请重新选择！';
+			albumPreview.appendChild(para);
 		}
 		// list.appendChild(listItem);
 		// }
 	}
 }
 
-avatarInput.addEventListener('change', updateImageDisplay);
+$(document).ready(function() {
+	$('#content').summernote({
+		placeholder: '请输入你的文章正文',
+		lang: 'zh-CN',
+		height: 400,
+		maxHeight: 500,
+		toolbar: [
+			['style', ['bold', 'italic', 'underline', 'clear']],
+			['font', ['strikethrough', 'superscript', 'subscript']],
+			['fontsize', ['fontsize']],
+			['color', ['color']],
+			['para', ['ul', 'ol', 'paragraph']],
+			['height', ['height']],
+			['insert', ['hr', 'link', 'picture', 'table']]
+		]
+	});
+
+	album.addEventListener('change', updateImageDisplay);
+
+});

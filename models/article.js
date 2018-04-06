@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
 			comment: '文章标题'
 		},
 		content: {
-			type: DataTypes.TEXT,
+			type: 'LONGTEXT',
 			allowNull: false,
 			comment: '文章内容'
 		},
@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: false,
 			comment: '文章标签'
 		},
-		imtro: {
+		intro: {
 			type: DataTypes.TEXT,
 			allowNull: false,
 			comment: '文章简介'

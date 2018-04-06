@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  div(class="container")
+    h2(class="text-center text-info") 发表文章
+    div(class="row")
+      div(class="col")
+        form(action="/article" method="POST" enctype="multipart/form-data")
+          div(class="row mt-2")
+            div(class="col-11")
+              input(class="form-control" type="text" name="title" placeholder="文章标题" required)
+            div(class="col-1")
+          div(class="row mt-2 px-3")
+            label(for="album" class="col-11 btn btn-primary ml-0") 点击选择文章封面（JPG/PNG）
+            input(class="col-1" id="album" type="file" name="album" required accept=".jpg, .jpeg, .png")
+          div(id="albumPreview")
+            p 未选择文件
+          input(class="form-control my-2" type="text" name="tags" placeholder="文章标签，标签之间使用英文半角分号隔开,例如：早餐;孕妇;营养" required)
+          hr
+          textarea(class="form-control" type="textarea" name="intro" rows="5" required) 文章简介
+          hr
+          textarea(class="form-control" id="content" type="textarea" name="content" required)
+          input(class="btn btn-primary my-2" type="submit" value="发表文章")
+
+  script(src="/js/postArticle.js")

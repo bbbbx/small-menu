@@ -55,7 +55,7 @@ block content
           li(class="page-item")
             a(class="page-link" href=`/menu/${offset + 100}`) 下一页
     hr
-    h3(class="text-center my-4") 共有 #{ totalMenusNum } 个菜谱
+    h3(class="text-center text-info my-4") 共有 #{ totalMenusNum } 个菜谱
     div(class="card-columns")
       - for (var i = 0; i < menus.length; i++)
         div(class="card")
@@ -64,7 +64,6 @@ block content
           div(class="card-body")
             a(href=`/detail/${menus[i].id}`)
               h5(class="card-title") #{menus[i].title}
-            //- p(class="card-text") #{ menus[i].imtro }
             - for (var j = 0; j < menus[i].tags.split(';').length; j++)
               span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ menus[i].tags.split(';')[j] }
               | &nbsp;

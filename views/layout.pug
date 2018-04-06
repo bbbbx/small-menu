@@ -173,6 +173,10 @@ html(lang="en")
               a(class="nav-link" href="/menu/0")
                 img(src="/svg/tray.svg" alt="/svg/cooker.svg" style="width: 1.5rem")
                 | &nbsp;所有菜谱 
+            li(class="nav-item") 
+              a(class="nav-link" href="/article")
+                img(src="/svg/article.svg" alt="/svg/article.svg" style="width: 1.5rem")
+                | &nbsp;所有文章
             li(class="nav-item")
               a(class="nav-link" href="/user")
                 img(src="/svg/chef.svg" alt="/svg/chef.svg" style="width: 1.5rem")
@@ -181,7 +185,7 @@ html(lang="en")
             input(class="form-control mr-sm-2"  type="search" placeholder="请输入要搜索的菜名" aria-label="Search" name="foodName" required)
             input(type="hidden" name="pn" value=0)
             button(class="btn btn-outline-success my-2 my-sm-0" type="submit") 搜索
-          button(class="btn btn-outline-success mr-5" href="/user") 试试手气
+          a(class="btn btn-outline-success mr-5" href="/random") 试试手气
 
           ul(class="navbar-nav mr-2")
             if navAvatar
@@ -191,31 +195,13 @@ html(lang="en")
                   img(src=navAvatar alt="navAvatar" style="width: 2rem")
                 div(class="dropdown-menu" aria-labelledby="audience")
                   a(class="dropdown-item" href="/user/0") 个人中心
+                  a(class="dropdown-item" href="/article/0") 发表文章
                   a(class="dropdown-item" href="/user/setting") 设置
                   a(class="dropdown-item text-danger" href="/logout") 退出登录
-                //- a(class="btn btn-outline-success" href="/user") 个人中心
-              //- | &nbsp;
-              //- li(class="nav-item mr-auto") 
-              //-   a(class="btn btn-outline-danger" href="/logout") 退出登录
             else 
               li(class="nav-item mr-auto") 
                 a(class="btn btn-outline-primary" href="/login") 登录
                 a(class="btn btn-outline-success ml-2" href="/register") 注册
-              
-          //- ul(class="navbar-nav mr-auto")
-          //-   if currentUser
-          //-     li(class="nav-item mr-auto") 
-          //-       a(class="btn btn-outline-success" href="/user") 个人中心
-          //-     | &nbsp;
-          //-     li(class="nav-item mr-auto") 
-          //-       a(class="btn btn-outline-danger" href="/logout") 退出登录
-          //-   else 
-          //-     li(class="nav-item mr-auto") 
-          //-       a(class="btn btn-outline-success" href="/login") 登录
-          //-       | &nbsp;
-          //-     li(class="navbar-nav mr-auto") 
-          //-       a(class="btn btn-outline-success" href="/register") 注册      
-          
 
     p(style="height: 80px")
     - for (var x = 0; x < errors.length; x++) 

@@ -12,6 +12,13 @@ router.get('/', function(req, res) {
 	res.render('index');
 });
 
+router.get('/random', function(req, res) {
+	Menu.findAll().then(menus => {
+		const id = Math.ceil(Math.random() * menus.length);
+		res.redirect(`/detail/${menus[id].id}`);
+	});
+});
+
 router.get('/confirmEmail', function(req, res) {
 	const { captcha, email, account } = req.query;
 	User.findOne({ where: { email, account, confirmed: false }})
