@@ -4,6 +4,10 @@ html(lang="en")
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0, shrink-to-fit=no")
     meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    meta(name="Keywords" Content="Express, 小当家, 食谱, 菜谱")
+    mata(name="Description" Content="一个使用 Express 搭建的菜谱网站")
+    link(rel="shortcut icon" href="/favicon.ico" type="image/x-icon")
+    link(rel="bookmark" href="/favicon.ico")
     link(rel="stylesheet" href="/css/bootstrap.min.css")
     link(rel="stylesheet" href="/summernote/summernote-bs4.css")
     script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous")
@@ -21,7 +25,7 @@ html(lang="en")
           button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
             span(class="navbar-toggler-icon")
           a(class="navbar-brand" href="/")
-            img(width=42 src="/logo.svg" alt="brand")
+            img(width=42 src="/favicon.svg" alt="/favicon.svg")
             | 小当家
         div(class="navbar-collapse collapse in" id="navbarSupportedContent" aria-expanded="true")
           ul(class="navbar-nav mr-auto")
@@ -171,7 +175,7 @@ html(lang="en")
                 | &nbsp;所有菜谱 
             li(class="nav-item")
               a(class="nav-link" href="/user")
-                img(src="/svg/cooker.svg" alt="/svg/cooker.svg" style="width: 1.5rem")
+                img(src="/svg/chef.svg" alt="/svg/chef.svg" style="width: 1.5rem")
                 | &nbsp;小当家们
           form(class="form-inline my-auto mr-2" action="/search" method="get")
             input(class="form-control mr-sm-2"  type="search" placeholder="请输入要搜索的菜名" aria-label="Search" name="foodName" required)
@@ -221,17 +225,17 @@ html(lang="en")
 
     block content
 
-    hr
-    footer(class="text-center font-weight-light")
+    footer(class="text-center font-weight-light bg-dark py-5 mt-2 text-light")
       p Created By &copy; 2018 
-        a(href="http://venusworld.cn") Venus &nbsp;
-        | Open Source On 
-        a(href="https://www.github.com/bbbbx/small-menu") Github 
-        | &nbsp; Enjoy it ~
+        a(href="http://venusworld.cn" class="text-warning") Venus
+        | &nbsp;with&nbsp;
+        img(src="/svg/heart.svg" alt="/svg/heart.svg" style="width: 1.5rem")
+        | &nbsp;&nbsp;Open Source On 
+        a(href="https://www.github.com/bbbbx/small-menu" class="text-info") Github
       p Icons made by 
-        a(href="http://www.freepik.com" title="Freepik") Freepik 
-        | from 
-        a(href="https://www.flaticon.com/" title="Flaticon") www.flaticon.com 
-        | is licensed by 
-        a(href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank") CC 3.0 BY
+        a(href="http://www.freepik.com" title="Freepik" class="text-success") Freepik
+        | &nbsp;from 
+        a(href="https://www.flaticon.com/" title="Flaticon" class="text-danger") www.flaticon.com
+        | &nbsp;is licensed by 
+        a(href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank" class="text-secondary") CC 3.0 BY
     script(src="/js/config.js")
