@@ -69,7 +69,7 @@ block content
                             a(href=`/detail/${currentUser.collections[i].id}` class="btn btn-success") 查看
                           div(class="col")
                             input(id=`remove${i}` type="button" class="btn btn-danger" value="移除" 
-                            onclick='$.ajax({ url: "http://localhost:3000/usermenus", method: "DELETE", data: { userId: ' + currentUser.id + ', menuId: ' + currentUser.collections[i].id + '}, timeout: 2000, error: function(data) { swal("哎呀!", "移除失败！", "error");} }).done(function() { $("#remove' + i + '").parent().parent().parent().parent().fadeTo("slow", 0.1, function() { $(this).slideUp("slow", function() { $(this).remove(); }) }); });')
+                            onclick='$.ajax({ url: "/usermenus", method: "DELETE", data: { userId: ' + currentUser.id + ', menuId: ' + currentUser.collections[i].id + '}, timeout: 2000, error: function(data) { swal("哎呀!", "移除失败！", "error");} }).done(function() { $("#remove' + i + '").parent().parent().parent().parent().fadeTo("slow", 0.1, function() { $(this).slideUp("slow", function() { $(this).remove(); }) }); });')
                         else
                           div(class="col")
                             a(href=`/detail/${currentUser.collections[i].id}` class="btn btn-success") 查看
@@ -89,7 +89,7 @@ block content
                           div(class="col")
                             a(class="btn btn-success" href=`/article/${currentUser.collectedArticles[i].id}`) 查看
                           div(class="col")
-                            input(id=`removeCollectedArticles${i}` type="button" class="btn btn-danger" value="移除" onclick='$.ajax({url: "http://localhost:3000/userarticle", method: "DELETE", data: { userId: ' + currentUser.id + ', articleId: ' + currentUser.collectedArticles[i].id + '}, timeout: 2000, error: function(data) { swal("哎呀!", "移除失败!", "error");} } ).done(function() { $("#removeCollectedArticles' + i + '").parent().parent().parent().parent().fadeTo("slow", 0.1, function() { $(this).slideUp("slow", function() { $(this).remove(); }) }); });')
+                            input(id=`removeCollectedArticles${i}` type="button" class="btn btn-danger" value="移除" onclick='$.ajax({url: "/userarticle", method: "DELETE", data: { userId: ' + currentUser.id + ', articleId: ' + currentUser.collectedArticles[i].id + '}, timeout: 2000, error: function(data) { swal("哎呀!", "移除失败!", "error");} } ).done(function() { $("#removeCollectedArticles' + i + '").parent().parent().parent().parent().fadeTo("slow", 0.1, function() { $(this).slideUp("slow", function() { $(this).remove(); }) }); });')
                         else
                           div(class="col")
                             a(href=`/article/${currentUser.collectedArticles[i].id}` class="btn btn-success") 查看
@@ -124,7 +124,7 @@ block content
                             a(href=`/user/${currentUser.following[j].id}` class="btn btn-success") 查看
                           div(class="col")
                             input(id=`following${j}` type="hidden" name="followingId" value=currentUser.following[j].id)
-                            input(id=`removeFollowing${j}` type="button" class="btn btn-danger" value="取消关注" onclick='$.ajax({url: "http://localhost:3000/following", method: "DELETE", data: { userId: ' + currentUser.id + ', followingId: ' + currentUser.following[j].id + '}, timeout: 2000, error: function(data) { swal("哎呀!", "移除失败!", "error");} } ).done(function() { $("#removeFollowing' + j + '").parent().parent().parent().parent().fadeTo("slow", 0.1, function() { $(this).slideUp("slow", function() { $(this).remove(); document.querySelector("#followingNum").innerText = " " + (parseInt(document.querySelector("#followingNum").innerText) - 1) + " "; }) }); });')
+                            input(id=`removeFollowing${j}` type="button" class="btn btn-danger" value="取消关注" onclick='$.ajax({url: "/following", method: "DELETE", data: { userId: ' + currentUser.id + ', followingId: ' + currentUser.following[j].id + '}, timeout: 2000, error: function(data) { swal("哎呀!", "移除失败!", "error");} } ).done(function() { $("#removeFollowing' + j + '").parent().parent().parent().parent().fadeTo("slow", 0.1, function() { $(this).slideUp("slow", function() { $(this).remove(); document.querySelector("#followingNum").innerText = " " + (parseInt(document.querySelector("#followingNum").innerText) - 1) + " "; }) }); });')
                         else
                           div(class="col")
                             a(href=`/user/${currentUser.following[j].id}` class="btn btn-success") 查看
