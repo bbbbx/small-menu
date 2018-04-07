@@ -14,8 +14,13 @@ router.get('/', function(req, res) {
 
 router.get('/random', function(req, res) {
 	Menu.findAll().then(menus => {
-		const id = Math.ceil(Math.random() * menus.length);
-		res.redirect(`/detail/${menus[id].id}`);
+		if (menus.length === 0) {
+			req.flash('error', '暂时没有菜谱');
+			res.redirect('/');
+		} else {
+			const id = Math.ceil(Math.random() * menus.length);
+			res.redirect(`/detail/${menus[id].id}`);
+		}
 	});
 });
 

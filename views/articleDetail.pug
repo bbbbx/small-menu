@@ -36,6 +36,13 @@ block content
 				- for (var i = 0; i < article.tags.split(';').length; i++)
 					span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ article.tags.split(';')[i] }
 					| &nbsp;
+				hr
+				div(class="") 
+					img(src=poster.avatar alt="poster.avatar" style="width: 2rem")
+					| &nbsp;&nbsp;
+					a(class="font-weight-bold" style="font-size: 1.2rem" href=`/user/${poster.id}`)!= poster.username
+					| &nbsp;发表于
+					span!= article.createdAt
 		hr
 		div(style="overflow: auto")!= article.content
 		hr

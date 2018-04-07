@@ -195,20 +195,44 @@ router.get('/:id', function(req, res) {
 			req.flash('error', '文章不存在！');
 			res.redirect('/article');
 		} else {
-			article.getArticleComments().then(articleComments => {
-				res.locals.comments = [];
-				if (articleComments.length === 0) {
-					res.render('articleDetail', { article: article.dataValues });
-				} else{
-					console.log(article.intro);
-					articleComments.map((value, index) => {
-						res.locals.comments[index] = articleComments[index].dataValues;
-						User.findById(articleComments[index].userId).then(user => {
-							res.locals.comments[index].user = user.dataValues;
-							if (index === articleComments.length - 1) {
-								res.render('articleDetail', { article: article.dataValues });
-							}
-						});
+			User.findById(article.userId).then(user => {
+				res.locals.poster = {};
+				if (!user) {
+					article.getArticleComments().then(articleComments => {
+						res.locals.comments = [];
+						if (articleComments.length === 0) {
+							res.render('articleDetail', { article: article.dataValues });
+						} else{
+							console.log(article.intro);
+							articleComments.map((value, index) => {
+								res.locals.comments[index] = articleComments[index].dataValues;
+								User.findById(articleComments[index].userId).then(user => {
+									res.locals.comments[index].user = user.dataValues;
+									if (index === articleComments.length - 1) {
+										res.render('articleDetail', { article: article.dataValues });
+									}
+								});
+							});
+						}
+					});
+				} else {
+					res.locals.poster = user.dataValues;
+					article.getArticleComments().then(articleComments => {
+						res.locals.comments = [];
+						if (articleComments.length === 0) {
+							res.render('articleDetail', { article: article.dataValues });
+						} else{
+							console.log(article.intro);
+							articleComments.map((value, index) => {
+								res.locals.comments[index] = articleComments[index].dataValues;
+								User.findById(articleComments[index].userId).then(user => {
+									res.locals.comments[index].user = user.dataValues;
+									if (index === articleComments.length - 1) {
+										res.render('articleDetail', { article: article.dataValues });
+									}
+								});
+							});
+						}
 					});
 				}
 			});
