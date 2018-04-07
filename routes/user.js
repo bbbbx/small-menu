@@ -4,7 +4,7 @@ const qiniu = require('qiniu');
 const path = require('path');
 
 const router = express.Router();
-const { User, Menu } = require('../models/index');
+const { User, Menu, Article } = require('../models/index');
 const { PLEASE_LOGIN, GENDER_ERROR, UPDATE_SUCCESS, QINIU_DOMAIN } = require('../utilities/const');
 const upload = multer({ 
 	dest: 'uploads/',
@@ -134,48 +134,26 @@ router.post('/setting', upload.single('avatar'), function(req, res) {
 });
 
 router.get('/0', function(req, res) {
+	res.locals.followingDisabled = false;
+
 	if (req.session.user) {
-		res.locals.collections = [];
-		res.locals.currentUser.comments = [];
+		req.session.user.following.map(value => {
+			if (value.id === req.session.user.id) {
+				res.locals.followingDisabled = true;
+			}
+		});
 		res.locals.removeVisiable = true;
 
-		User.findById(res.locals.currentUser.id)
-			.then(user => {
-				if (!user) {
-					req.flash('error', '用户不存在！');
-					res.redirect('/login');
-				} else {
-					user.getMenus().then(menus => {
-						menus.map((value, index) => {
-							res.locals.collections.push(menus[index]);
-						});
-						user.getComments().then(comments => {
-							if (comments.length === 0) {
-								res.render('user');
-							} else {
-								comments.map((value, index) => {
-									res.locals.currentUser.comments[index] = comments[index].dataValues;
-									Menu.findById(comments[index].menuId).then(menu => {
-										res.locals.currentUser.comments[index].menu = menu.dataValues;
-										if (index === comments.length - 1) {
-											res.render('user');
-										}
-									});
-								});
-							}
-						});
-					});
-				}
-			});
+		res.render('user');
+
 	} else {
 		req.flash('error', '请先登录！');
-		res.redirect('login');
+		res.redirect('/login');
 	}
 });
 
 router.get('/:id', function(req, res) {
 	const { id } = req.params;
-	res.locals.collections = [];
 	res.locals.followingDisabled = false;
 
 	if (req.session.user) {
@@ -197,9 +175,14 @@ router.get('/:id', function(req, res) {
 				res.locals.currentUser.following = [];
 				res.locals.currentUser.followers = [];
 				res.locals.currentUser.comments = [];
+				res.locals.currentUser.collections = [];
+				res.locals.currentUser.collectedArticles = [];
+				res.locals.currentUser.articles = [];
+				res.locals.currentUser.articleComments = [];
+
 				user.getMenus().then(menus => {
 					menus.map((value, index) => {
-						res.locals.collections.push(menus[index]);
+						res.locals.currentUser.collections.push(menus[index]);
 					});
 					res.locals.removeVisiable = false;
 					user.getFollowing().then(followings => {
@@ -210,21 +193,63 @@ router.get('/:id', function(req, res) {
 							followers.map((value) => {
 								res.locals.currentUser.followers.push(value);
 							});
-							user.getComments().then(comments => {
-								if (comments.length === 0) {
-									res.render('user');
-								} else {
-									comments.map((value, index) => {
-										res.locals.currentUser.comments[index] = comments[index].dataValues;
-										Menu.findById(comments[index].menuId).then(menu => {
-											res.locals.currentUser.comments[index].menu = menu.dataValues;
-											if (index === comments.length - 1) {
-												res.render('user');
-											}
-										});
+
+							user.getArticles().then(collectedArticles => {
+								collectedArticles.map(value => {
+									res.locals.currentUser.collectedArticles.push(value.dataValues);
+								});
+								Article.findAll({
+									where: { userId: res.locals.currentUser.id}
+								}).then(articles => {
+									articles.map(value => {
+										res.locals.currentUser.articles.push(value.dataValues);
 									});
-								}
+									user.getArticleComments().then(articleComments => {
+										if (articleComments.length === 0) {
+											user.getComments().then(comments => {
+												if (comments.length === 0) {
+													res.render('user');
+												} else {
+													comments.map((value, index) => {
+														res.locals.currentUser.comments[index] = comments[index].dataValues;
+														Menu.findById(comments[index].menuId).then(menu => {
+															res.locals.currentUser.comments[index].menu = menu.dataValues;
+															if (index === comments.length - 1) {
+																res.render('user');
+															}
+														});
+													});
+												}
+											});
+										} else {
+											articleComments.map((value, index) => {
+												res.locals.currentUser.articleComments.push(articleComments[index].dataValues);
+												Article.findById(articleComments[index].articleId).then(article => {
+													res.locals.currentUser.articleComments[index].article = article.dataValues;
+													if (index === articleComments.length - 1) {
+														user.getComments().then(comments => {
+															if (comments.length === 0) {
+																res.render('user');
+															} else {
+																comments.map((value, index) => {
+																	res.locals.currentUser.comments[index] = comments[index].dataValues;
+																	Menu.findById(comments[index].menuId).then(menu => {
+																		res.locals.currentUser.comments[index].menu = menu.dataValues;
+																		if (index === comments.length - 1) {
+																			res.render('user');
+																		}
+																	});
+																});
+															}
+														});
+													}
+												});
+											});
+										}
+									});
+								});
 							});
+
 						});
 					});
 				});

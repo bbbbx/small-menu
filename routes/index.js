@@ -1,7 +1,7 @@
 const express = require('express');
 const multer  = require('multer');
 const upload = multer();
-const { User, Captcha, Menu, UserMenu, Comment, UserFollowing, UserFollowers } = require('../models/index');
+const { User, Captcha, Menu, UserMenu, Comment, UserFollowing, UserFollowers, UserArticle } = require('../models/index');
 const { PLEASE_LOGIN } = require('../utilities/const');
 const router = express.Router();
 
@@ -127,16 +127,41 @@ router.delete('/usermenus', function(req, res) {
 					});
 					res.end();
 				});
-				// req.flash('info', '移除成功');
-				// res.redirect(200, '/user');
-				// router.get('/user');
-				// res.locals.infos = ['移除成功'];
-				// res.render('user');
 			}
 		});
 	} else {
 		res.send(PLEASE_LOGIN);
 	}
+});
+
+router.delete('/userarticle', function(req, res) {
+	const { articleId } = req.body;
+
+	if (res.locals.currentUser) {
+		UserArticle.findOne({
+			where: { 
+				userId: res.locals.currentUser.id,
+				articleId: parseInt(articleId)
+			}
+		}).then(UserArticle => {
+			if (!UserArticle) {
+				res.send('收藏不存在！');
+			} else {
+				UserArticle.destroy().then(() => {
+					
+					req.session.user.collectedArticles.map((value, index) => {
+						if (parseInt(articleId) === value.id) {
+							req.session.user.collectedArticles.splice(index, 1);
+						}
+					});
+					res.end();
+				});
+			}
+		});
+	} else {
+		res.send(PLEASE_LOGIN);
+	}
+	
 });
 
 router.delete('/following', function(req, res) {
@@ -200,7 +225,6 @@ router.get('/following', function(req, res) {
 					user.addFollowing(following).then(() => {
 						following.addFollowers(user).then(() => {
 
-							req.session.user = user.dataValues;
 							req.session.user.following = [];
 							req.session.user.followers = [];
 							user.getFollowing().then(followings => {
@@ -238,8 +262,13 @@ router.post('/comment', upload.array(), function(req, res) {
 			menuId
 		}).then(comment => {
 			if (comment) {
-				req.flash('info', '发表成功');
-				res.redirect(`/detail/${menuId}#commentForm`);
+				req.session.user.comments.push(comment.dataValues);
+				Menu.findById(req.session.user.comments[req.session.user.comments.length-1].menuId).then(menu => {
+					req.session.user.comments[req.session.user.comments.length-1].menu = menu.dataValues;
+					req.flash('info', '发表成功');
+					res.redirect(`/detail/${menuId}#commentForm`);
+				});
+				
 			} else {
 				req.flash('error', '发表失败！');
 				res.redirect(`/detail/${menuId}`);

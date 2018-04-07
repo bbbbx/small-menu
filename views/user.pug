@@ -23,14 +23,13 @@ block content
             span(class="badge badge-danger") 未验证
         div(class="card-text")
           | 关注
-          span(class="text-info") #{ currentUser.following ? currentUser.following.length: 0 } 
+          span(id="followingNum" class="text-info") #{ currentUser.following ? currentUser.following.length: 0 } 
           | 粉丝
           span(class="text-info") #{ currentUser.followers ? currentUser.followers.length: 0}
           p #{ currentUser.intro }
           if !currentUser.confirmed
             div(class="alert alert-danger" role="alert") 未验证邮箱，请尽快验证！验证后请重新登录
       div(class="col-3")
-        //- a(href=`/following?followingId=${currentUser.id}` class="btn btn-primary w-75") 关注
         if currentUser && !followingDisabled
           a(href=`/following?followingId=${currentUser.id}` class="btn btn-primary w-75") 关注
         else if currentUser && followingDisabled
@@ -42,34 +41,73 @@ block content
       div(class="col")
         ul(class="nav nav-tabs" id="myTab" role="tablist")
           li(class="nav-item")
-            a(class="nav-link active" id="collection-tab" data-toggle="tab" href="#collection" role="tab" aria-controls="collection" aria-selected="true") 收藏
+            a(class="nav-link active" id="collection-tab" data-toggle="tab" href="#collection" role="tab" aria-controls="collection" aria-selected="true") 收藏食谱
+          li(class="nav-item")
+            a(class="nav-link" id="collectedArticle-tab" data-toggle="tab" href="#collectedArticle" role="tab" aria-controls="collectedArticle" aria-selected="false") 收藏文章
+          li(class="nav-item")
+            a(class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false") 文章
           li(class="nav-item")
             a(class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false") 关注
           li(class="nav-item")
             a(class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false") 粉丝
           li(class="nav-item")
-            a(class="nav-link" id="comment-tab" data-toggle="tab" href="#comment" role="tab" aria-controls="comment" aria-selected="false") 评论
+            a(class="nav-link" id="comment-tab" data-toggle="tab" href="#comment" role="tab" aria-controls="comment" aria-selected="false") 食谱评论
+          li(class="nav-item")
+            a(class="nav-link" id="articleComment-tab" data-toggle="tab" href="#articleComment" role="tab" aria-controls="articleComment" aria-selected="false") 文章评论
         div(class="tab-content" id="myTabContent")
           div(class="tab-pane fade show active" id="collection" role="tabpanel" aria-labelledby="collection-tab")
             div(class="card-columns mt-4")
-              if collections.length > 0
-                - for (let i = 0; i < collections.length; i++)
+              if currentUser.collections.length > 0
+                - for (let i = 0; i < currentUser.collections.length; i++)
                   div(class="card")
-                    img(class="card-img-top" src=collections[i].albums alt="collections[i].albums")
+                    img(class="card-img-top" src=currentUser.collections[i].albums alt="currentUser.collections[i].albums")
                     div(class="card-body")
-                      h5(class="card-title") #{ collections[i].title }
+                      h5(class="card-title") #{ currentUser.collections[i].title }
                       div(class="row")
                         if removeVisiable
                           div(class="col")
-                            a(href=`/detail/${collections[i].id}` class="btn btn-success") 查看
+                            a(href=`/detail/${currentUser.collections[i].id}` class="btn btn-success") 查看
                           div(class="col")
-                            input(id=`menuId${i}` type="hidden" name="menuId" value=collections[i].id)
-                            input(id=`remove${i}` type="button" class="btn btn-danger" value="移除" onclick='$.ajax({url: "http://localhost:3000/usermenus", method: "DELETE", data: { userId: ' + currentUser.id + ', menuId: ' + collections[i].id + '} } ).done(function() { $("#remove' + i + '").parent().parent().parent().parent().remove(); });')
+                            input(id=`remove${i}` type="button" class="btn btn-danger" value="移除" 
+                            onclick='$.ajax({ url: "http://localhost:3000/usermenus", method: "DELETE", data: { userId: ' + currentUser.id + ', menuId: ' + currentUser.collections[i].id + '}, timeout: 2000, error: function(data) { swal("哎呀!", "移除失败！", "error");} }).done(function() { $("#remove' + i + '").parent().parent().parent().parent().fadeTo("slow", 0.1, function() { $(this).slideUp("slow", function() { $(this).remove(); }) }); });')
                         else
                           div(class="col")
-                            a(href=`/detail/${collections[i].id}` class="btn btn-success") 查看
+                            a(href=`/detail/${currentUser.collections[i].id}` class="btn btn-success") 查看
               else 
-                p 没有收藏
+                p 没有收藏食谱
+
+          div(class="tab-pane fade" id="collectedArticle" role="tabpanel" aria-labelledby="collectedArticle-tab")
+            div(class="card-columns mt-4")
+              if currentUser.collectedArticles.length > 0
+                - for (let i = 0; i < currentUser.collectedArticles.length; i++)
+                  div(class="card")
+                    img(class="card-img-top" src=currentUser.collectedArticles[i].album alt="currentUser.collectedArticles[i].album")
+                    div(class="card-body")
+                      h5(class="card-title") #{ currentUser.collectedArticles[i].title }
+                      div(class="row")
+                        if removeVisiable
+                          div(class="col")
+                            a(class="btn btn-success" href=`/article/${currentUser.collectedArticles[i].id}`) 查看
+                          div(class="col")
+                            input(id=`removeCollectedArticles${i}` type="button" class="btn btn-danger" value="移除" onclick='$.ajax({url: "http://localhost:3000/userarticle", method: "DELETE", data: { userId: ' + currentUser.id + ', articleId: ' + currentUser.collectedArticles[i].id + '}, timeout: 2000, error: function(data) { swal("哎呀!", "移除失败!", "error");} } ).done(function() { $("#removeCollectedArticles' + i + '").parent().parent().parent().parent().fadeTo("slow", 0.1, function() { $(this).slideUp("slow", function() { $(this).remove(); }) }); });')
+                        else
+                          div(class="col")
+                            a(href=`/article/${currentUser.collectedArticles[i].id}` class="btn btn-success") 查看
+              else
+                p 未收藏文章
+
+          div(class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab")
+            div(class="card-columns mt-4")
+              if currentUser.articles.length > 0
+                - for (let i = 0; i < currentUser.articles.length; i++)
+                  div(class="card")
+                    img(class="card-img-top" src=currentUser.articles[i].album alt="currentUser.articles[i].album")
+                    div(class="card-body")
+                      h5(class="card-title")!= currentUser.articles[i].title 
+                      p(class="")
+                      a(class="btn btn-success" href=`/article/${currentUser.articles[i].id}`) 查看
+              else
+                p 未发表文章
 
           div(class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab") 
             div(class="card-columns mt-4")
@@ -86,7 +124,7 @@ block content
                             a(href=`/user/${currentUser.following[j].id}` class="btn btn-success") 查看
                           div(class="col")
                             input(id=`following${j}` type="hidden" name="followingId" value=currentUser.following[j].id)
-                            input(id=`removeFollowing${j}` type="button" class="btn btn-danger" value="取消关注" onclick='$.ajax({url: "http://localhost:3000/following", method: "DELETE", data: { userId: ' + currentUser.id + ', followingId: ' + currentUser.following[j].id + '} } ).done(function() { $("#removeFollowing' + j + '").parent().parent().parent().parent().remove(); });')
+                            input(id=`removeFollowing${j}` type="button" class="btn btn-danger" value="取消关注" onclick='$.ajax({url: "http://localhost:3000/following", method: "DELETE", data: { userId: ' + currentUser.id + ', followingId: ' + currentUser.following[j].id + '}, timeout: 2000, error: function(data) { swal("哎呀!", "移除失败!", "error");} } ).done(function() { $("#removeFollowing' + j + '").parent().parent().parent().parent().fadeTo("slow", 0.1, function() { $(this).slideUp("slow", function() { $(this).remove(); document.querySelector("#followingNum").innerText = " " + (parseInt(document.querySelector("#followingNum").innerText) - 1) + " "; }) }); });')
                         else
                           div(class="col")
                             a(href=`/user/${currentUser.following[j].id}` class="btn btn-success") 查看
@@ -117,4 +155,18 @@ block content
                       != currentUser.comments[i].content 
                       a(class="btn btn-success" href=`/detail/${currentUser.comments[i].menu.id}#commentArea`) 查看
               else
-                p 未发表评论
+                p 未发表食谱评论
+
+          div(class="tab-pane fade" id="articleComment" role="tabpanel" aria-labelledby="articleComment-tab")
+            div(class="card-columns mt-4")
+              if currentUser.articleComments.length > 0
+                - for (let i = 0; i < currentUser.articleComments.length; i++)
+                  div(class="card")
+                    img(class="card-img-top" src=currentUser.articleComments[i].article.album alt="currentUser.articleComments[i].article.album")
+                    div(class="card-body")
+                      h5(class="card-title") 评论对象：#{ currentUser.articleComments[i].article.title }
+                      p(class="") 评论内容：
+                      != currentUser.articleComments[i].content 
+                      a(class="btn btn-success" href=`/article/${currentUser.articleComments[i].article.id}#commentArea`) 查看
+              else
+                p 未发表文章评论

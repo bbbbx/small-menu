@@ -68,7 +68,7 @@ function updateImageDisplay() {
 
 $(document).ready(function() {
 	$('#content').summernote({
-		placeholder: '请输入你的文章正文',
+		placeholder: '请输入你的文章正文，插入照片请使用外链，本地上传与封面照片冲突，暂时未能解决/(ㄒoㄒ)/~~',
 		lang: 'zh-CN',
 		height: 400,
 		maxHeight: 500,

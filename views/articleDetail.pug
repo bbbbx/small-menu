@@ -30,12 +30,14 @@ block content
 			div(class="col-8")
 				h6 
 					img(src="/svg/ingredient.svg" alt="/svg/ingredient.svg" style="width: 1.5rem")
-					| &nbsp;&nbsp;简介：#{ article.intro }
+					| &nbsp;&nbsp;文章简介：
+				hr
+				p(style="overflow: auto") #{ article.intro }
 				- for (var i = 0; i < article.tags.split(';').length; i++)
 					span(class="badge badge-pill badge-info my-1" style="font-size: 1rem") #{ article.tags.split(';')[i] }
 					| &nbsp;
 		hr
-		div!= article.content
+		div(style="overflow: auto")!= article.content
 		hr
 		if currentUser
 			div(class="row" id="commentForm")

@@ -25,6 +25,9 @@ router.post('/', function(req, res) {
 	} else if (gender !== '男' && gender !== '女') {
 		req.flash('error', '性别有误！');
 		res.redirect('/register');
+	} else if (! (/^[a-zA-Z0-9]{5,16}$/.test(account)) ) {
+		req.flash('error', '账号只能是英文字母或数字！');
+		res.redirect('/register');
 	} else {
 		const CAPTCHA = Math.floor(100000 + Math.random() * 899999);
 

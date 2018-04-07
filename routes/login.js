@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const svgCaptcha = require('svg-captcha');
-const { User, Article } = require('../models/index');
+const { User, Article, Menu } = require('../models/index');
 const router = express.Router();
 
 router.get('/', function(req, res) {
@@ -37,6 +37,7 @@ router.post('/', function(req, res) {
 							req.session.user.collectedArticles = [];
 							req.session.user.articles = [];
 							req.session.user.articleComments = [];
+							req.session.user.comments = [];
 
 							user.getFollowing().then(followings => {
 								followings.map(value => {
@@ -61,11 +62,51 @@ router.post('/', function(req, res) {
 													req.session.user.articles.push(value.dataValues);
 												});
 												user.getArticleComments().then(articleComments => {
-													articleComments.map(value => {
-														req.session.user.articleComments.push(value.dataValues);
-													});
-													console.log(req.session.user);
-													res.redirect('/');
+													if (articleComments.length === 0) {
+														user.getComments().then(comments => {
+															if (comments.length === 0) {
+																console.log(req.session.user);
+																res.redirect('/');
+															} else {
+																comments.map((value, index) => {
+																	req.session.user.comments[index] = comments[index].dataValues;
+																	Menu.findById(comments[index].menuId).then(menu => {
+																		req.session.user.comments[index].menu = menu.dataValues;
+																		if (index === comments.length - 1) {
+																			console.log(req.session.user);
+																			res.redirect('/');
+																		}
+																	});
+																});
+															}
+														});
+													} else {
+														articleComments.map((value, index) => {
+															req.session.user.articleComments.push(articleComments[index].dataValues);
+															Article.findById(articleComments[index].articleId).then(article => {
+																req.session.user.articleComments[index].article = article.dataValues;
+																if (index === articleComments.length - 1) {
+																	user.getComments().then(comments => {
+																		if (comments.length === 0) {
+																			console.log(req.session.user);
+																			res.redirect('/');
+																		} else {
+																			comments.map((value, index) => {
+																				req.session.user.comments[index] = comments[index].dataValues;
+																				Menu.findById(comments[index].menuId).then(menu => {
+																					req.session.user.comments[index].menu = menu.dataValues;
+																					if (index === comments.length - 1) {
+																						console.log(req.session.user);
+																						res.redirect('/');
+																					}
+																				});
+																			});
+																		}
+																	});
+																}
+															});
+														});
+													}
 												});
 											});
 										});

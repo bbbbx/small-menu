@@ -27,9 +27,17 @@ router.post('/comment', upload.array(), function(req, res) {
 			content: commentContent
 		}).then(articleComment => {
 			if (articleComment) {
-				req.session.user.articleComments.push(articleComment.dataValues);
-				req.flash('info', '发表成功');
-				res.redirect(`/article/${articleId}`);
+				Article.findById(parseInt(articleId)).then(article => {
+					if (article) {
+						req.session.user.articleComments.push(articleComment.dataValues);
+						req.session.user.articleComments[req.session.user.articleComments.length-1].article = article.dataValues;
+						req.flash('info', '发表成功');
+						res.redirect(`/article/${articleId}`);
+					} else {
+						req.flash('error', '发表失败！');
+						res.redirect(`/article/${articleId}`);		
+					}
+				});
 			} else {
 				req.flash('error', '发表失败！');
 				res.redirect(`/article/${articleId}`);
@@ -192,6 +200,7 @@ router.get('/:id', function(req, res) {
 				if (articleComments.length === 0) {
 					res.render('articleDetail', { article: article.dataValues });
 				} else{
+					console.log(article.intro);
 					articleComments.map((value, index) => {
 						res.locals.comments[index] = articleComments[index].dataValues;
 						User.findById(articleComments[index].userId).then(user => {

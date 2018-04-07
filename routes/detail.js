@@ -20,6 +20,7 @@ router.get('/:id', function(req, res) {
 				req.flash('error', '菜谱不存在');
 				res.redirect('/');
 			} else {
+				console.log(menu.imtro);
 				let temp = menu.steps.split(';');
 				menu.dataValues.steps = [];
 				for (let i = 0; i < temp.length; i++) {
