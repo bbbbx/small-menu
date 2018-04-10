@@ -2,9 +2,16 @@ extends layout
 
 block content
   div(class="container")
-    h1(class="text-center text-danger")= message
-    h2(class="text-center text-danger")
-      img(src="/svg/program-error.svg" alt="/svg/program-error.svg" style="width: 2.5rem")
-      | &nbsp;
-      = error.status
+    div(class="row ml-5 my-5")
+      div(class="col-6")
+        img(src="/svg/program-error.svg" alt="/svg/program-error.svg" style="width: 25rem")
+      div(class="col-6 mt-4")
+        h1(class="text-danger")= message
+        h2(class="text-danger")
+          | &nbsp;
+          = error.status
+        p(class="my-3") 你来到了荒无人烟的地方&nbsp;
+        p(class="my-2")
+          a(href="/") 返回主页
+
     //- pre #{error.stack}
