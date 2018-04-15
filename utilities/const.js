@@ -14,7 +14,16 @@ const UPDATE_SUCCESS = '更新成功';
 const POST_SUCCESS = '发表成功';
 const PLEASE_SELECT_FILE = '请选择文件！';
 
+const SUCCESS_CODE = 200;
+const ERROR_CODE = 404;
+const SUCCESS_MESSAGE = '请求成功';
+const USER_NOT_EXISTS = '用户不存在';
+
 module.exports = {
+	ERROR_CODE,
+	SUCCESS_CODE,
+	SUCCESS_MESSAGE,
+	USER_NOT_EXISTS,
 	PLEASE_SELECT_FILE,
 	POST_SUCCESS,
 	QINIU_DOMAIN,
