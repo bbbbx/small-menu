@@ -70,33 +70,65 @@ app.use(function(req, res, next) {
 	}).then(response => {
 		const date = new Date();
 		res.locals.date = date;
+		const random = Math.floor(Math.random() * 150);
 		if (date.getHours() >= 1 && date.getHours() <= 5) {
 			res.locals.recommand = `${cool()} 这么晚了，还不睡？`;
-			res.locals.recommandUrl = '/category/41/0';
+			res.locals.recommandUrl = `/category/41/${random}`;
 		} else if (date.getHours() <= 10) {
 			res.locals.recommand = `${cool()} 早上好，没吃早餐吧。`;
-			res.locals.recommandUrl = '/category/37/0';
+			res.locals.recommandUrl = `/category/37/${random}`;
 		} else if (date.getHours() <= 14) {
 			res.locals.recommand = `${cool()} 中午好，吃午餐了吗？`;
-			res.locals.recommandUrl = '/category/38/0';
+			res.locals.recommandUrl = `/category/38/${random}`;
 		} else if (date.getHours() <= 17) {
 			res.locals.recommand = `${cool()} 下午好，要喝点下午茶吗？`;
-			res.locals.recommandUrl = '/category/39/0';
+			res.locals.recommandUrl = `/category/39/${random}`;
 		} else if (date.getHours() <= 21) {
 			res.locals.recommand = `${cool()} 晚上好，吃晚餐了吗？`;
-			res.locals.recommandUrl = '/category/40/0';
+			res.locals.recommandUrl = `/category/40/${random}`;
 		} else {
 			res.locals.recommand = `${cool()} 夜深了，要吃点宵夜吗？`;
-			res.locals.recommandUrl = '/category/41/0';
+			res.locals.recommandUrl = `/category/41/${random}`;
 		}
 		if (response.data.code === 0) {
 			const { ip, country, city, area, region } = response.data.data;
 	
 			res.locals.ip = ip;
 			res.locals.country = country;
-			res.locals.city = city;
 			res.locals.area = area;
 			res.locals.region = region;
+			res.locals.city = city;
+
+			const region2cid = {
+				四川: 10,
+				广东: 11,
+				湖南: 12,
+				山东: 13,
+				北京: 14,
+				东北: 15,
+				黑龙江: 15,
+				辽宁: 15,
+				吉林: 15,
+				日本: 17,
+				美国: 16,
+				韩国: 18,
+				福建: 101,
+				浙江: 102,
+				江苏: 104,
+				安徽: 105,
+				河南: 107,
+				山西: 108,
+				江西: 109,
+				湖北: 110,
+				云南: 112,
+				贵州: 113,
+				新疆: 114,
+				香港: 118,
+				台湾: 119,
+				海南: 126,
+			};
+
+			res.locals.cid = typeof region2cid[region] === 'undefined' ? 'notfound': region2cid[region];
 	
 			next();
 		} else {
