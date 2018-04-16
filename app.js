@@ -70,7 +70,7 @@ app.use(function(req, res, next) {
 	}).then(response => {
 		const date = new Date();
 		res.locals.date = date;
-		const random = Math.floor(Math.random() * 150);
+		const random = Math.floor(Math.random() * 100);
 		if (date.getHours() >= 1 && date.getHours() <= 5) {
 			res.locals.recommand = `${cool()} 这么晚了，还不睡？`;
 			res.locals.recommandUrl = `/category/41/${random}`;
