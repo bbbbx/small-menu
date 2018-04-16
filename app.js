@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
+const axios = require('axios');
 const { PORT } = require('./utilities/const');
 
 const index = require('./routes/index');
@@ -26,6 +27,7 @@ let app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.set('trust proxy', true);    // 设置反向代理
 
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -43,6 +45,9 @@ app.use(flash());
 // app.use(passport.session());
 // setUpPassport();
 
+/**
+ * 存储 req.session 为 res.locals
+ */
 app.use(function(req, res, next) {	
 	// res.locals.currentUser = req.user ? req.user: req.session.user;
 	res.locals.currentUser = req.session.user;
@@ -51,6 +56,37 @@ app.use(function(req, res, next) {
 	res.locals.errors = req.flash('error');
 	res.locals.infos = req.flash('info');
 	next();
+});
+
+/**
+ * 转换 IP 地址为真实地址，获取时间
+ */
+app.use(function(req, res, next) {
+	axios({
+		method: 'get',
+		url: `http://ip.taobao.com/service/getIpInfo.php?ip=${req.ip}`,
+		responseType: 'json'
+	}).then(response => {
+		res.locals.date = new Date();
+		if (response.data.code === 0) {
+			const { ip, country, city, area, region } = response.data.data;
+	
+			res.locals.ip = ip;
+			res.locals.country = country;
+			res.locals.city = city;
+			res.locals.area = area;
+			res.locals.region = region;
+	
+			next();
+		} else {
+			res.locals.ip = '获取失败';
+			res.locals.country = '获取失败';
+			res.locals.city = '获取失败';
+			res.locals.area = '获取失败';
+			res.locals.region = '获取失败';
+			next();
+		}
+	});
 });
 
 app.use('/', index);

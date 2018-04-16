@@ -283,17 +283,5 @@ router.post('/comment', upload.array(), function(req, res) {
 	}
 });
 
-router.get('/test/', function(req, res) {
-	let getClientIp = function (req) {  
-		return req.headers['x-forwarded-for'] ||  
-			req.connection.remoteAddress ||  
-			req.socket.remoteAddress ||  
-			req.connection.socket.remoteAddress || '';  
-	};  
-  
-	console.log(getClientIp(req));
-
-	res.send(getClientIp(req));
-});
 
 module.exports = router;
