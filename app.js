@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
 const axios = require('axios');
+const cool = require('cool-ascii-faces');
 const { PORT } = require('./utilities/const');
 
 const index = require('./routes/index');
@@ -67,7 +68,27 @@ app.use(function(req, res, next) {
 		url: `http://ip.taobao.com/service/getIpInfo.php?ip=${req.ip}`,
 		responseType: 'json'
 	}).then(response => {
-		res.locals.date = new Date();
+		const date = new Date();
+		res.locals.date = date;
+		if (date.getHours() >= 1 && date.getHours() <= 5) {
+			res.locals.recommand = `${cool()} 这么晚了，还不睡？`;
+			res.locals.recommandUrl = '/category/41/0';
+		} else if (date.getHours() <= 10) {
+			res.locals.recommand = `${cool()} 早上好，没吃早餐吧。`;
+			res.locals.recommandUrl = '/category/37/0';
+		} else if (date.getHours() <= 14) {
+			res.locals.recommand = `${cool()} 中午好，吃午餐了吗？`;
+			res.locals.recommandUrl = '/category/38/0';
+		} else if (date.getHours() <= 17) {
+			res.locals.recommand = `${cool()} 下午好，要喝点下午茶吗？`;
+			res.locals.recommandUrl = '/category/39/0';
+		} else if (date.getHours() <= 21) {
+			res.locals.recommand = `${cool()} 晚上好，吃晚餐了吗？`;
+			res.locals.recommandUrl = '/category/40/0';
+		} else {
+			res.locals.recommand = `${cool()} 夜深了，要吃点宵夜吗？`;
+			res.locals.recommandUrl = '/category/41/0';
+		}
 		if (response.data.code === 0) {
 			const { ip, country, city, area, region } = response.data.data;
 	
