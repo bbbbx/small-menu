@@ -1,12 +1,83 @@
 extends layout
 
+block title
+  title 登录 —— 小当家
+
 block content
   div(class="container")
-    div(class="row")
+    div(class="row mb-5")
       div(class="col")
       div(class="col")
-        h5 登录
-        form(action="/login", method="post")
+        ul(class="nav nav-tabs" id="myTab" role="tablist")
+          li(class="nav-item")
+            a(class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true") 登录
+          li(class="nav-item")
+            a(class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false") 注册
+          li(class="nav-item")
+            a(class="nav-link" id="forget-password-tab" data-toggle="tab" href="#forget-password" role="tab" aria-controls="forget-password" aria-selected="false") 找回密码
+        div(class="tab-content" id="myTabContent")
+          div(class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab")
+            form(action="/login", method="post")
+              if account
+                div(class="form-group")
+                  label(for="account") 账户
+                  input(type="text" class="form-control" id="account" name="account" required minlength="5" maxlength="16" value=account)
+                div(class="form-group")
+                  label(for="password") 密码
+                  input(type="password" class="form-control" id="password" name="password" required minlength="8" maxlength="16" autofocus="autofocus")
+              else
+                div(class="form-group")
+                  label(for="account") 账户
+                  input(type="text" class="form-control" id="account" name="account" required autofocus="autofocus" minlength="5" maxlength="16")
+                div(class="form-group")
+                  label(for="password") 密码
+                  input(type="password" class="form-control" id="password" name="password" required minlength="8" maxlength="16" )
+              hr
+              input(type="text" class="form-control" id="captcha" name="captcha" required placeholder="验证码（区分大小写）")
+              != captcha.data
+              button(type="submit" class="btn btn-primary") 登录
+
+          div(class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab")
+            form(action="/register", method="post" id="register")
+              input(type="email" class="form-control my-2" id="email" name="email" required autofocus="autofocus" placeholder="E-mail")
+              input(type="text" class="form-control my-2" id="account" name="account" required placeholder="账号（至少五位数）" minlength="5" maxlength="16")
+              input(type="password" class="form-control my-2" id="password" name="password" required placeholder="密码（至少八位数）" minlength="8" maxlength="16")
+              input(type="password" class="form-control my-2" id="passwordConfirm" name="passwordConfirm" required placeholder="确认密码" minlength="8" maxlength="16")
+              input(type="text" class="form-control my-2" name="gender" list="gender" placeholder="性别" minlenght="1" maxlength="1" required)
+              datalist(id="gender"  class="dropdown-menu")
+                option(value="男" class="dropdown-item")
+                option(value="女" class="dropdown-item")
+              hr
+              input(type="text" class="form-control" id="captcha" name="captcha" required placeholder="验证码(区分大小写)")
+              != captcha.data 
+              button(type="submit" class="btn btn-primary") 注册
+
+          div(class="tab-pane fade" id="forget-password" role="tabpanel" aria-labelledby="forget-password-tab")
+            if email
+              form(action="/password", method="post")
+                input(type="text" class="form-control my-2" id="account" name="account" required value=account minlength="5" maxlength="16")
+                input(type="email" class="form-control my-2" id="email" name="email" required value=email)    
+                input(type="password" class="form-control my-2" id="password" name="password" value=password required minlength="8" maxlength="16")
+                input(type="password" class="form-control my-2" id="passwordConfirm" name="passwordConfirm" value=passwordConfirm required minlength="8" maxlength="16")
+                hr
+                div
+                  button(type="submit" class="btn btn-primary mb-2" disabled) 获取邮箱验证码    
+                input(type="text" class="form-control" id="emailCaptcha" name="emailCaptcha" placeholder="请填写邮件收到的验证码") 
+                button(type="submit" class="btn btn-primary my-2") 确认重置密码
+            else 
+              form(action="/password", method="post")
+                input(type="text" class="form-control my-2" id="account" name="account" required autofocus="autofocus" placeholder="账号" minlength="5" maxlength="16")
+                input(type="email" class="form-control my-2" id="email" name="email" required placeholder="邮箱")
+                input(type="password" class="form-control my-2" id="password" name="password" placeholder="新密码" required minlength="8" maxlength="16")
+                input(type="password" class="form-control my-2" id="passwordConfirm" name="passwordConfirm" placeholder="确认新密码" required minlength="8" maxlength="16")
+                hr
+                div
+                  button(type="submit" class="btn btn-primary mb-2") 获取邮箱验证码
+                input(type="text" class="form-control" id="emailCaptcha" name="emailCaptcha" placeholder="请填写邮件收到的验证码") 
+                button(type="submit" class="btn btn-primary my-2" disabled) 确认重置密码
+        
+        //- h5 登录
+        //- form(action="/login", method="post")
           if account
             div(class="form-group")
               label(for="account") 账户
@@ -25,7 +96,8 @@ block content
           input(type="text" class="form-control" id="captcha" name="captcha" required placeholder="验证码（区分大小写）")
           != captcha.data
           button(type="submit" class="btn btn-primary") 登录
-        div(class="row mt-3")
+        
+        //- div(class="row mt-3")
           div(class="col")
             a(class="" href="/register") 注册
           div(class="col")

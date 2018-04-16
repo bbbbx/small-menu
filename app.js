@@ -66,7 +66,8 @@ app.use(function(req, res, next) {
 	axios({
 		method: 'get',
 		url: `http://ip.taobao.com/service/getIpInfo.php?ip=${req.ip}`,
-		responseType: 'json'
+		responseType: 'json',
+		timeout: 2000,
 	}).then(response => {
 		const date = new Date();
 		res.locals.date = date;
@@ -87,7 +88,7 @@ app.use(function(req, res, next) {
 			res.locals.recommand = `${cool()} 晚上好，吃晚餐了吗？`;
 			res.locals.recommandUrl = `/category/40/${random}`;
 		} else {
-			res.locals.recommand = `${cool()} 夜深了，要吃点宵夜吗？`;
+			res.locals.recommand = `${cool()} 夜深了，要吃点夜宵吗？`;
 			res.locals.recommandUrl = `/category/41/${random}`;
 		}
 		if (response.data.code === 0) {

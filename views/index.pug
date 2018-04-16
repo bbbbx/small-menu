@@ -1,5 +1,7 @@
 extends layout
 
+block title
+  title 小当家——你的私人食谱
 
 block content
   //- div(class="container-fluid mb-5 px-0")  
@@ -27,7 +29,7 @@ block content
     a(href=recommandUrl) &nbsp;推荐菜谱&nbsp;
     | ？
     br
-    | 似乎你来自 #{ region }？来点
+    | 你似乎来自 #{ region }？来点
     a(href=`/category/${cid}/0`) &nbsp;#{ region }特色美食&nbsp;
     | ？
 
