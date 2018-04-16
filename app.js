@@ -117,6 +117,7 @@ app.use(function(req, res, next) {
 				江苏: 104,
 				安徽: 105,
 				河南: 107,
+				河北: 107,
 				山西: 108,
 				江西: 109,
 				湖北: 110,
@@ -126,6 +127,7 @@ app.use(function(req, res, next) {
 				香港: 118,
 				台湾: 119,
 				海南: 126,
+				上海: 115,
 			};
 
 			res.locals.cid = typeof region2cid[region] === 'undefined' ? 'notfound': region2cid[region];
