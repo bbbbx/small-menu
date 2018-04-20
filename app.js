@@ -39,7 +39,10 @@ app.use(cookieParser());
 app.use(session({
 	secret: 'a5717a649d346ed0c51be68888c130cd',
 	resave: true,
-	saveUninitialized: true
+	saveUninitialized: true,
+	// cookie: {
+	// 	maxAge: 1000 * 60 * 60 * 24 * 14	// 14 天
+	// }
 }));
 app.use(flash());
 // app.use(passport.initialize());

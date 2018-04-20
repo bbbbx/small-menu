@@ -151,12 +151,12 @@ block content
               if currentUser.comments.length > 0
                 - for (let i = 0; i < currentUser.comments.length; i++)
                   div(class="card")
-                    img(class="card-img-top" src=currentUser.comments[i].menu.albums alt="currentUser.comments[i].menu.albums")
+                    //- img(class="card-img-top" src=currentUser.comments[i].menu.albums alt="currentUser.comments[i].menu.albums")
                     div(class="card-body")
-                      h5(class="card-title") 评论对象：#{ currentUser.comments[i].menu.title }
+                      //- h5(class="card-title") 评论对象：#{ currentUser.comments[i].menu.title }
                       p(class="") 评论内容：
                       != currentUser.comments[i].content 
-                      a(class="btn btn-success" href=`/detail/${currentUser.comments[i].menu.id}#commentArea`) 查看
+                      a(class="btn btn-success" href=`/detail/${currentUser.comments[i].menuId}#commentArea`) 查看
               else
                 p 未发表食谱评论
 
@@ -165,11 +165,11 @@ block content
               if currentUser.articleComments.length > 0
                 - for (let i = 0; i < currentUser.articleComments.length; i++)
                   div(class="card")
-                    img(class="card-img-top" src=currentUser.articleComments[i].article.album alt="currentUser.articleComments[i].article.album")
+                    //- img(class="card-img-top" src=currentUser.articleComments[i].article.album alt="currentUser.articleComments[i].article.album")
                     div(class="card-body")
-                      h5(class="card-title") 评论对象：#{ currentUser.articleComments[i].article.title }
-                      p(class="") 评论内容：
+                      //- h5(class="card-title") 评论对象：#{ currentUser.articleComments[i].article.title }
+                      //- p(class="") 评论内容：
                       != currentUser.articleComments[i].content 
-                      a(class="btn btn-success" href=`/article/${currentUser.articleComments[i].article.id}#commentArea`) 查看
+                      a(class="btn btn-success" href=`/article/${currentUser.articleComments[i].articleId}#commentArea`) 查看
               else
                 p 未发表文章评论

@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const svgCaptcha = require('svg-captcha');
-const { User, Article, Menu } = require('../models/index');
+const { User, Article, Menu, ArticleComment, Comment } = require('../models/index');
 const router = express.Router();
 
 router.get('/', function(req, res) {
@@ -19,7 +19,15 @@ router.post('/', function(req, res) {
 		req.flash('error', '验证码错误！');
 		res.redirect('/login');
 	} else {
-		User.findOne({ where: { account }})
+		User.findOne({
+			where: { account },
+			include: [
+				Article,
+				ArticleComment,
+				Menu,
+				Comment
+			]
+		})
 			.then(user => {
 				if (!user) {
 					req.flash('error', '用户不存在!');
@@ -30,14 +38,15 @@ router.post('/', function(req, res) {
 							req.flash('error', err);
 							res.redirect('/login');
 						} else if (isMatch) {
+							console.log(user.dataValues);
 							req.session.user = user.dataValues;
 							req.session.user.following = [];
 							req.session.user.followers = [];
-							req.session.user.collections = [];
-							req.session.user.collectedArticles = [];
+							req.session.user.collections = user.dataValues.menus;
+							req.session.user.collectedArticles = user.dataValues.articles;
 							req.session.user.articles = [];
-							req.session.user.articleComments = [];
-							req.session.user.comments = [];
+							req.session.user.articleComments = user.dataValues.articleComments;
+							req.session.user.comments = user.dataValues.comments;
 
 							user.getFollowing().then(followings => {
 								followings.map(value => {
@@ -47,70 +56,14 @@ router.post('/', function(req, res) {
 									followers.map(value => {
 										req.session.user.followers.push(value.dataValues);
 									});
-									user.getMenus().then(menus => {
-										menus.map(value => {
-											req.session.user.collections.push(value.dataValues);
+									Article.findAll({
+										where: { userId: req.session.user.id}
+									}).then(articles => {
+										articles.map(value => {
+											req.session.user.articles.push(value.dataValues);
 										});
-										user.getArticles().then(collectedArticles => {
-											collectedArticles.map(value => {
-												req.session.user.collectedArticles.push(value.dataValues);
-											});
-											Article.findAll({
-												where: { userId: req.session.user.id}
-											}).then(articles => {
-												articles.map(value => {
-													req.session.user.articles.push(value.dataValues);
-												});
-												user.getArticleComments().then(articleComments => {
-													if (articleComments.length === 0) {
-														user.getComments().then(comments => {
-															if (comments.length === 0) {
-																console.log(req.session.user);
-																res.redirect('/');
-															} else {
-																comments.map((value, index) => {
-																	req.session.user.comments[index] = comments[index].dataValues;
-																	Menu.findById(comments[index].menuId).then(menu => {
-																		req.session.user.comments[index].menu = menu.dataValues;
-																		if (index === comments.length - 1) {
-																			console.log(req.session.user);
-																			res.redirect('/');
-																		}
-																	});
-																});
-															}
-														});
-													} else {
-														articleComments.map((value, index) => {
-															req.session.user.articleComments.push(articleComments[index].dataValues);
-															Article.findById(articleComments[index].articleId).then(article => {
-																req.session.user.articleComments[index].article = article.dataValues;
-																if (index === articleComments.length - 1) {
-																	user.getComments().then(comments => {
-																		if (comments.length === 0) {
-																			console.log(req.session.user);
-																			res.redirect('/');
-																		} else {
-																			comments.map((value, index) => {
-																				req.session.user.comments[index] = comments[index].dataValues;
-																				Menu.findById(comments[index].menuId).then(menu => {
-																					req.session.user.comments[index].menu = menu.dataValues;
-																					if (index === comments.length - 1) {
-																						console.log(req.session.user);
-																						res.redirect('/');
-																					}
-																				});
-																			});
-																		}
-																	});
-																}
-															});
-														});
-													}
-												});
-											});
-										});
-
+										console.log(req.session.user);
+										res.redirect('/');
 									});
 								});
 							});
