@@ -87,7 +87,7 @@ app.use(function(req, res, next) {
 		} else if (date.getHours() <= 14) {
 			res.locals.recommand = `${cool()} 中午好，吃午餐了吗？`;
 			res.locals.recommandUrl = `/category/38/${random}`;
-		} else if (date.getHours() <= 17) {
+		} else if (date.getHours() <= 16) {
 			res.locals.recommand = `${cool()} 下午好，要喝点下午茶吗？`;
 			res.locals.recommandUrl = `/category/39/${random}`;
 		} else if (date.getHours() <= 21) {

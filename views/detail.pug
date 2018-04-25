@@ -60,6 +60,9 @@ block content
 						img(src=result.steps[k].img alt='result.steps[k].img')
 						hr
 		hr
+		h4 分享本页
+		.addthis_inline_share_toolbox
+		hr
 		if currentUser
 			div(class="row" id="commentForm")
 				div(class="col-2")
@@ -78,7 +81,7 @@ block content
 			div(class="alert alert-danger text-center") 
 				a(href="/login") 登录
 				span 后即可发表评论
-		hr
+		
 		- for (var x = 0; x < errors.length; x++) 
 			div(class="alert alert-danger text-center" role="alert") #{ errors[x] }
 		- for (var j = 0; j < infos.length; j++) 
