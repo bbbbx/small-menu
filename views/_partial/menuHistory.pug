@@ -1,0 +1,9 @@
+if menuHistory.length > 0
+  .card-group.mb-3(style="overflow: auto;")
+    each val in menuHistory
+      div.card
+        a(href=`/detail/${val.id}`)
+          img.card-img-top(src=val.albums alt="val.albums" style="max-width: 10rem;")
+        .card-body
+          h5.card-title
+            a.px-4(href=`/detail/${val.id}`)!= val.title 

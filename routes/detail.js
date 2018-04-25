@@ -20,7 +20,17 @@ router.get('/:id', function(req, res) {
 				req.flash('error', '菜谱不存在');
 				res.redirect('/');
 			} else {
-				console.log(menu.imtro);
+				req.session.menuHistory = req.session.menuHistory ? req.session.menuHistory: [];
+				req.session.menuHistory.push({
+					id: menu.id,
+					title: menu.title,
+					tags: menu.tags,
+					albums: menu.albums
+				});
+				if (req.session.menuHistory.length > 10) {
+					req.session.menuHistory.shift();
+				}
+
 				let temp = menu.steps.split(';');
 				menu.dataValues.steps = [];
 				for (let i = 0; i < temp.length; i++) {

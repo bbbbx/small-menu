@@ -52,8 +52,9 @@ app.use(flash());
 /**
  * 存储 req.session 为 res.locals
  */
-app.use(function(req, res, next) {	
-	// res.locals.currentUser = req.user ? req.user: req.session.user;
+app.use(function(req, res, next) {
+	res.locals.menuHistory = req.session.menuHistory ? req.session.menuHistory: [];
+	res.locals.recommandWords = [];
 	res.locals.currentUser = req.session.user;
 	res.locals.navAvatar = req.session.user ? req.session.user.avatar: false;
 	res.locals.navUsername = req.session.user ? req.session.user.username: false;

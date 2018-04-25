@@ -1,4 +1,5 @@
 const express = require('express');
+const nodejieba = require('nodejieba');
 const multer  = require('multer');
 const upload = multer();
 const { User, Captcha, Menu, UserMenu, Comment, UserFollowing, UserFollowers, UserArticle } = require('../models/index');
@@ -9,6 +10,15 @@ router.get('/', function(req, res) {
 	if (req.session.user) {
 		res.locals.currentUser = req.session.user;
 	}
+	let titles = '';
+	for (let i = 0; i < res.locals.menuHistory.length; i++) {
+		titles += res.locals.menuHistory[i].title;
+	}
+	res.locals.recommandWords = nodejieba.extract(titles, 3);
+	res.locals.recommandWords.forEach(value => {
+		value.weight = value.weight.toFixed(1);
+	});
+
 	res.render('index');
 });
 

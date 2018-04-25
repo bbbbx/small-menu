@@ -1,0 +1,7 @@
+if recommandWords.length > 0
+  div.alert-info.text-center.py-2
+    | 根据你的足迹，猜你喜欢：
+    each val in recommandWords
+      span.recommandWords
+        a(href=`/search?foodName=${val.word}&pn=0`)!= val.word
+        span &nbsp;&nbsp;推荐指数： #{ val.weight }；
