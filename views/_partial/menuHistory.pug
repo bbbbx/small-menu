@@ -1,8 +1,9 @@
 if menuHistory.length > 0
-  .d-flex.px-4.my-2(style="overflow: auto;")
-    each val in menuHistory
-      .col-sm-2.border.border-gray-light.rounded.px-2.mx-1
-        a(href=`/detail/${val.id}`)
-          img.card-img-top(src=val.albums alt="val.albums")
-        h5.card-title
-          a.px-4(href=`/detail/${val.id}`)!= val.title 
+  .menu-history
+    .d-flex.px-4.my-2(style="overflow: auto;")
+      each val in menuHistory
+        .col-sm-2.border.border-gray-light.rounded.px-2.mx-1
+          a(href=`/detail/${val.id}`)
+            img.card-img-top(src=val.albums alt="val.albums")
+          h5.card-title
+            a.px-4(href=`/detail/${val.id}`)!= val.title 

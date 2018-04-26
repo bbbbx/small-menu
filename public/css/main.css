@@ -1,0 +1,26 @@
+.menu-history {
+  width: 100%;
+  position: relative;
+}
+
+.menu-history::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10%;
+  height: 100%;
+  background-image: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0));
+  z-index: 999;
+}
+
+.menu-history::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10%;
+  height: 100%;
+  background-image: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0));
+  z-index: 999;
+}

@@ -27,9 +27,6 @@ router.get('/:id', function(req, res) {
 					tags: menu.tags,
 					albums: menu.albums
 				});
-				if (req.session.menuHistory.length > 10) {
-					req.session.menuHistory.shift();
-				}
 
 				let temp = menu.steps.split(';');
 				menu.dataValues.steps = [];
