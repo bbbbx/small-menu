@@ -149,6 +149,38 @@ app.use(function(req, res, next) {
 			res.locals.region = '获取失败';
 			next();
 		}
+	}).catch(err => {
+		const date = new Date();
+		res.locals.date = date;
+		const random = Math.floor(Math.random() * 100);
+		if (date.getHours() < 1) {
+			res.locals.recommand = `${cool()} 夜深了，要吃点夜宵吗？`;
+			res.locals.recommandUrl = `/category/41/${random}`;
+		} else if (date.getHours() >= 1 && date.getHours() <= 5) {
+			res.locals.recommand = `${cool()} 这么晚了，还不睡？`;
+			res.locals.recommandUrl = `/category/41/${random}`;
+		} else if (date.getHours() <= 10) {
+			res.locals.recommand = `${cool()} 早上好，没吃早餐吧。`;
+			res.locals.recommandUrl = `/category/37/${random}`;
+		} else if (date.getHours() <= 14) {
+			res.locals.recommand = `${cool()} 中午好，吃午餐了吗？`;
+			res.locals.recommandUrl = `/category/38/${random}`;
+		} else if (date.getHours() <= 16) {
+			res.locals.recommand = `${cool()} 下午好，要喝点下午茶吗？`;
+			res.locals.recommandUrl = `/category/39/${random}`;
+		} else if (date.getHours() <= 21) {
+			res.locals.recommand = `${cool()} 晚上好，吃晚餐了吗？`;
+			res.locals.recommandUrl = `/category/40/${random}`;
+		} else {
+			res.locals.recommand = `${cool()} 夜深了，要吃点夜宵吗？`;
+			res.locals.recommandUrl = `/category/41/${random}`;
+		}
+		res.locals.ip =
+		res.locals.country =
+		res.locals.city = 
+		res.locals.area = 
+		res.locals.region = '请求超时';
+		next();
 	});
 });
 

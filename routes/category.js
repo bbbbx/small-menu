@@ -55,6 +55,8 @@ router.get('/:cid/:pn', function(req, res) {
 				}
 				// res.render('category', { data: response.data});
 			}
+		}).catch(err => {
+			res.status(200).send(`聚合 API 请求错误 ${err}`);
 		});
 	}
 	// res.render('category');
