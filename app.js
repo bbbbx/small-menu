@@ -142,11 +142,11 @@ app.use(function(req, res, next) {
 	
 			next();
 		} else {
-			res.locals.ip = '获取失败';
-			res.locals.country = '获取失败';
-			res.locals.city = '获取失败';
-			res.locals.area = '获取失败';
-			res.locals.region = '获取失败';
+			res.locals.ip = req.ip;
+			res.locals.country = 
+			res.locals.city = 
+			res.locals.area = 
+			res.locals.region = false;
 			next();
 		}
 	}).catch(err => {
@@ -175,7 +175,7 @@ app.use(function(req, res, next) {
 			res.locals.recommand = `${cool()} 夜深了，要吃点夜宵吗？`;
 			res.locals.recommandUrl = `/category/41/${random}`;
 		}
-		res.locals.ip =
+		res.locals.ip = req.ip;
 		res.locals.country =
 		res.locals.city = 
 		res.locals.area = 

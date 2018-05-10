@@ -33,6 +33,8 @@ block content
       | 你似乎来自 #{ region }？来点
       a(href=`/category/${cid}/0`) &nbsp;#{ region }特色美食&nbsp;
       | ？
+    else
+      p.alert-danger.text-center.py-2 IP 转物理地址错误
 
   include _partial/recommandWords
   include _partial/menuHistory
