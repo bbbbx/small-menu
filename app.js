@@ -71,7 +71,7 @@ app.use(function(req, res, next) {
 		method: 'get',
 		url: `http://ip.taobao.com/service/getIpInfo.php?ip=${req.ip}`,
 		responseType: 'json',
-		timeout: 2000,
+		timeout: 10000,
 	}).then(response => {
 		const date = new Date();
 		res.locals.date = date;
@@ -179,7 +179,7 @@ app.use(function(req, res, next) {
 		res.locals.country =
 		res.locals.city = 
 		res.locals.area = 
-		res.locals.region = '请求超时';
+		res.locals.region = false;
 		next();
 	});
 });

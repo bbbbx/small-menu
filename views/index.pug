@@ -29,9 +29,10 @@ block content
     a(href=recommandUrl) &nbsp;推荐菜谱&nbsp;
     | ？
     br
-    | 你似乎来自 #{ region }？来点
-    a(href=`/category/${cid}/0`) &nbsp;#{ region }特色美食&nbsp;
-    | ？
+    if region
+      | 你似乎来自 #{ region }？来点
+      a(href=`/category/${cid}/0`) &nbsp;#{ region }特色美食&nbsp;
+      | ？
 
   include _partial/recommandWords
   include _partial/menuHistory
