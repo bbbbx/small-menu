@@ -34,7 +34,7 @@ block content
       a(href=`/category/${cid}/0`) &nbsp;#{ region }特色美食&nbsp;
       | ？
     else
-      p.alert-danger.text-center.py-2 IP 转物理地址错误
+      p.alert-danger.text-center.py-2 你的IP：#{ ip }，IP 转物理地址错误
 
   include _partial/recommandWords
   include _partial/menuHistory
