@@ -70,6 +70,8 @@ html(lang="en")
       div(class="alert alert-danger text-center" role="alert") #{ errors[x] }
     - for (var j = 0; j < infos.length; j++) 
       div(class="alert alert-success text-center" role="alert") #{ infos[j] }
+      
+    .alert.alert-danger.text-center.font-weight-bold 注意：API 次数到了，不能查询菜谱了，只能查看已有的 “所有菜谱”，求位 dalao 赞助打赏。
 
     block content
 
@@ -95,9 +97,8 @@ html(lang="en")
     script(type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5aded2b7ff6b5a86")
     <!-- Global site tag (gtag.js) - Google Analytics -->
     script(async src="https://www.googletagmanager.com/gtag/js?id=UA-118652906-1")
-    script
-      | window.dataLayer = window.dataLayer || [];
-      | function gtag(){dataLayer.push(arguments);}
-      | gtag('js', new Date());
-      |
-      | gtag('config', 'UA-118652906-1');
+    script.
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-118652906-1');
