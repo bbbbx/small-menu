@@ -5,11 +5,11 @@ describe('loading express', function() {
 	var server = require('../app');
 	
 	after('All tests passed', function(done) {
-		process.exit(0);
 		done();
+		process.exit(0);
 	});
 
-	it('GET / ,response with 200 and html', function(done) {
+	it('response with 200 and html', function(done) {
 		request(server)
 			.get('/')
 			.expect('Content-Type', /html/)
@@ -20,7 +20,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('GET /menu/0 ,response with 200 and html', function(done) {
+	it('response with 200 and html', function(done) {
 		request(server)
 			.get('/menu/0')
 			.expect('Content-Type', /html/)
@@ -31,7 +31,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('GET /article ,response with 200 and html', function(done) {
+	it('response with 200 and html', function(done) {
 		request(server)
 			.get('/article')
 			.expect('Content-Type', /html/)
@@ -42,7 +42,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('GET /user ,response with 200 and html', function(done) {
+	it('response with 200 and html', function(done) {
 		request(server)
 			.get('/user')
 			.expect('Content-Type', /html/)
@@ -53,7 +53,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('GET /login ,response with 200 and html', function(done) {
+	it('response with 200 and html', function(done) {
 		request(server)
 			.get('/login')
 			.expect('Content-Type', /html/)
@@ -64,7 +64,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('POST /login ,response with 302', function(done) {
+	it('response with 302', function(done) {
 		request(server)
 			.post('/login')
 			.send({

@@ -16,7 +16,7 @@ const upload = multer({
 router.get('/', function(req, res) {
 	res.locals.users = [];
 	User.findAll().then(users => {
-		if (users.lenght === 0) {
+		if (users.length === 0) {
 			res.render('chart');
 		} else {
 			users.map((value, index) => {
@@ -53,9 +53,6 @@ router.get('/setting', function(req, res) {
 
 router.post('/setting', upload.single('avatar'), function(req, res) {
 	const { username, gender, intro} = req.body;
-
-	console.log(username, gender, intro);
-	console.log(req.file);
 
 	if (!req.session.user) {
 		req.flash('error', PLEASE_LOGIN);
@@ -105,8 +102,6 @@ router.post('/setting', upload.single('avatar'), function(req, res) {
 				throw respErr;
 			}
 			if (respInfo.statusCode == 200) {
-				console.log(respBody);
-
 				User.update({
 					username,
 					gender: intGender,
@@ -158,7 +153,6 @@ router.get('/:id', function(req, res) {
 
 	if (req.session.user) {
 		req.session.user.following.map(value => {
-			console.log(value.id === parseInt(id));
 			if (value.id === parseInt(id)) {
 				res.locals.followingDisabled = true;
 			}
