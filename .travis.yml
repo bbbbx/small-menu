@@ -7,14 +7,8 @@ addons:
 services:
   - mysql
 before_install:
-  - mysql -e "show databases; SELECT host, user, authentication_string FROM mysql.user;"
-  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('root') where User='root'; update user set plugin='mysql_native_password'; FLUSH PRIVILEGES;"
-  - sudo mysql_upgrade --force
-  - sudo service mysql restart
   - mysql -e "CREATE DATABASE IF NOT EXISTS smallmenu DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;"
-  - mysql -e "use mysql; SELECT host, user, authentication_string FROM user;"
-  - mysql -e "show databases; SELECT host, user, authentication_string FROM mysql.user;"
 install:
   - npm install
 script:
-  - npm start
+  - npm test

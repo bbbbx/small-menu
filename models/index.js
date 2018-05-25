@@ -13,7 +13,8 @@ let sequelize = new Sequelize(
 		host: HOSTNAME,
 		dialect: 'mysql',
 		port: 3306,
-		operatorsAliases: false
+		operatorsAliases: false,
+		logging: false
 	});
 
 const Menu = sequelize.import('./Menu');

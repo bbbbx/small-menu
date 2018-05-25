@@ -25,6 +25,7 @@ const menu = require('./routes/menu');
 const article = require('./routes/article');
 
 let app = express();
+let server;
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -209,4 +210,6 @@ app.use(function(req, res) {
 	res.render('error');
 });
 
-http.createServer(app).listen(PORT, '0.0.0.0');
+server = app.listen(PORT, '0.0.0.0');
+
+module.exports = server;
