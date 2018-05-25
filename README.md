@@ -1,5 +1,7 @@
 # 小当家
 
+![https://api.travis-ci.org/bbbbx/small-menu.svg?branch=master](https://api.travis-ci.org/bbbbx/small-menu.svg?branch=master)
+
 小当家是一个搜索和分享菜谱的 Express Web 应用，旨在打造一个可以在线搜索菜谱和分享菜谱的网站。
 
 ![首页](./docs/images/preview_home.png)
