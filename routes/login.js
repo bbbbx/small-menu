@@ -18,7 +18,7 @@ router.post('/', function(req, res) {
 	const { account, password, captcha } = req.body;
 	if (captcha !== req.session.captcha) {
 		req.flash('error', '验证码错误！');
-		res.redirect('/login');
+		res.redirect('back');
 	} else {
 		User.findOne({
 			where: { account },
@@ -32,14 +32,13 @@ router.post('/', function(req, res) {
 			.then(user => {
 				if (!user) {
 					req.flash('error', '用户不存在!');
-					res.redirect('/login');
+					res.redirect('back');
 				} else if (user.confirmed) {
 					bcrypt.compare(password, user.password, (err, isMatch) => {
 						if (err) {
 							req.flash('error', err);
-							res.redirect('/login');
+							res.redirect('back');
 						} else if (isMatch) {
-							console.log(user.dataValues);
 							req.session.user = user.dataValues;
 							req.session.user.following = [];
 							req.session.user.followers = [];
@@ -63,21 +62,20 @@ router.post('/', function(req, res) {
 										articles.map(value => {
 											req.session.user.articles.push(value.dataValues);
 										});
-										console.log(req.session.user);
-										res.redirect(res.app.locals.Referer);
+										res.redirect(res.app.locals.Referer);  // res.app.locals.Referer 为在 GET /user 时存储的 `req.get('Referer')`
 									});
 								});
 							});
 						} else {
 							req.flash('error', '密码错误！');	
 							req.session.account = account;
-							res.redirect('/login');
+							res.redirect('back');
 						}
 					});
 				} else {
 					req.flash('error', '请先验证注册邮箱！');	
 					req.session.account = account;
-					res.redirect('/login');
+					res.redirect('back');
 				}
 			});
 		

@@ -121,8 +121,8 @@ router.post('/setting', upload.single('avatar'), function(req, res) {
 					});
 				});
 			} else {
-				console.log(respInfo.statusCode);
-				console.log(respBody);
+				req.flash('info', UPDATE_SUCCESS);
+				res.redirect('back');
 			}
 		});
 	}
