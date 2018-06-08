@@ -26,7 +26,7 @@ const article = require('./routes/article');
 
 let app = express();
 let server = http.createServer(app);
-server.listen(PORT, '0.0.0.0');
+server.listen(PORT);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
