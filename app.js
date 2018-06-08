@@ -25,7 +25,8 @@ const menu = require('./routes/menu');
 const article = require('./routes/article');
 
 let app = express();
-let server;
+let server = http.createServer(app);
+server.listen(PORT, '0.0.0.0');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -68,9 +69,10 @@ app.use(function(req, res, next) {
  * 转换 IP 地址为真实地址，获取时间
  */
 app.use(function(req, res, next) {
+	let ip =  req.ip.split(':')[req.ip.split(':').length-1];
 	axios({
 		method: 'get',
-		url: `http://ip.taobao.com/service/getIpInfo.php?ip=${req.ip}`,
+		url: `http://ip.taobao.com/service/getIpInfo.php?ip=${ip}`,
 		responseType: 'json',
 		timeout: 10000,
 	}).then(response => {
@@ -209,7 +211,5 @@ app.use(function(req, res) {
 	res.status(err.status || 500);
 	res.render('error');
 });
-
-server = app.listen(PORT, '0.0.0.0');
 
 module.exports = server;

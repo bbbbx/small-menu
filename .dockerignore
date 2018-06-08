@@ -1,0 +1,8 @@
+.git/
+node_modules/
+.gitignore
+.idea
+.DS_Store
+*.swp
+*.log
+.package-lock.json

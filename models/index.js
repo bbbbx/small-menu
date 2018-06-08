@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 const DATABASE_NAME = 'smallmenu';
 const DATABASE_USERNAME = 'root';
 const DATABASE_PASSWORD = '';
+// const HOSTNAME = 'mysql';
 const HOSTNAME = 'localhost';
 
 let sequelize = new Sequelize(
