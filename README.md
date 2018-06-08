@@ -10,6 +10,13 @@
 
 使用现代浏览器打开 [http://smallmenu.venusworld.cn:3000](http://smallmenu.venusworld.cn:3000) ，推荐使用 Chrome、Safari、IE9 及以上。
 
+## Docker 部署
+```bash
+docker-compose up
+```
+
+then open `localhost:3000`.
+
 ## 本地运行
 
 1. 先安装 MySQL，确保 MySQL 运行于 `3306` 默认端口，然后进入 MySQL 新建一个 `smallmenu` 数据库并指定字符集：
