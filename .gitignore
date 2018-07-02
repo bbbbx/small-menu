@@ -59,4 +59,5 @@ typings/
 
 # multer upload folder
 /uploads
+package-lock.json
 

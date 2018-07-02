@@ -3,8 +3,8 @@ const Sequelize = require('sequelize');
 const DATABASE_NAME = 'smallmenu';
 const DATABASE_USERNAME = 'root';
 const DATABASE_PASSWORD = '';
-const HOSTNAME = 'mysql';
-// const HOSTNAME = 'localhost';
+// const HOSTNAME = 'mysql';    // docker 部署 时使用
+const HOSTNAME = 'localhost';   // 本地部署     时使用
 
 let sequelize = new Sequelize(
 	DATABASE_NAME,
