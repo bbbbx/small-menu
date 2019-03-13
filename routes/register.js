@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
 			req.flash('error', '用户已存在');
 			res.redirect('/register');
 		} else {
-			bcrypt.hash(password, saltRounds, (err, hash) => {
+			bcrypt.hash(password, saltRounds, async (err, hash) => {
 				const avatar = gender === '男' ? AVATAR_BOY : AVATAR_GIRL;
 				const intGender = gender === '男' ? 1 : 0;
 
