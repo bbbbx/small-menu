@@ -58,6 +58,7 @@ typings/
 .env
 
 # multer upload folder
-/uploads
-package-lock.json
+/uploads/*
+!/uploads/.gitkeep
+/package-lock.json
 

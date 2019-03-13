@@ -9,7 +9,7 @@ describe('loading express', function() {
 		process.exit(0);
 	});
 
-	it('response with 200 and html', function(done) {
+	it('should response with 200 and html', function(done) {
 		request(server)
 			.get('/')
 			.expect('Content-Type', /html/)
@@ -20,7 +20,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('response with 200 and html', function(done) {
+	it('should response with 200 and html', function(done) {
 		request(server)
 			.get('/menu/0')
 			.expect('Content-Type', /html/)
@@ -31,7 +31,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('response with 200 and html', function(done) {
+	it('should response with 200 and html', function(done) {
 		request(server)
 			.get('/article')
 			.expect('Content-Type', /html/)
@@ -42,7 +42,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('response with 200 and html', function(done) {
+	it('should response with 200 and html', function(done) {
 		request(server)
 			.get('/user')
 			.expect('Content-Type', /html/)
@@ -53,7 +53,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('response with 200 and html', function(done) {
+	it('should response with 200 and html', function(done) {
 		request(server)
 			.get('/login')
 			.expect('Content-Type', /html/)
@@ -64,7 +64,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('response with 302', function(done) {
+	it('should response with 302', function(done) {
 		request(server)
 			.post('/login')
 			.send({
@@ -79,7 +79,7 @@ describe('loading express', function() {
 			});
 	});
 
-	it('404 everything else', function(done) {
+	it('should response 404 everything else', function(done) {
 		request(server)
 			.get('/foo/bar')
 			.expect(404)

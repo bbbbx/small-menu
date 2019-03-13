@@ -16,7 +16,10 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
 	const { account, password, captcha } = req.body;
-	if (captcha.toLowerCase() !== req.session.captcha.toLowerCase()) {
+
+	req.session.captcha = req.session.captcha && req.session.captcha.toLowerCase();
+	
+	if (captcha.toLowerCase() !== req.session.captcha) {
 		req.flash('error', '验证码错误！');
 		res.redirect('back');
 	} else {
