@@ -10,7 +10,7 @@ const upload = multer({
 	dest: 'uploads/'
 });
 
-router.post('/comment', upload.array(), function(req, res) {
+router.post('/comment', upload.array(), async function (req, res) {
 	const { articleId, commentContent } = req.body;
 	console.log(commentContent);
 	
@@ -21,28 +21,23 @@ router.post('/comment', upload.array(), function(req, res) {
 		req.flash('error', '评论不能为空');
 		res.redirect(`/article/${articleId}`);
 	} else {
-		ArticleComment.create({
+		let articleComment = await ArticleComment.create({
 			userId: req.session.user.id,
 			articleId: parseInt(articleId),
 			content: commentContent
-		}).then(articleComment => {
-			if (articleComment) {
-				Article.findById(parseInt(articleId)).then(article => {
-					if (article) {
-						req.session.user.articleComments.push(articleComment.dataValues);
-						req.session.user.articleComments[req.session.user.articleComments.length-1].article = article.dataValues;
-						req.flash('info', '发表成功');
-						res.redirect(`/article/${articleId}`);
-					} else {
-						req.flash('error', '发表失败！');
-						res.redirect(`/article/${articleId}`);		
-					}
-				});
+		});
+		if (articleComment) {
+			let article = await Article.findById(parseInt(articleId));
+			if (article) {
+				req.session.user.articleComments.push(articleComment.dataValues);
+				req.session.user.articleComments[req.session.user.articleComments.length-1].article = article.dataValues;
+				req.flash('info', '发表成功');
+				res.redirect(`/article/${articleId}`);
 			} else {
 				req.flash('error', '发表失败！');
-				res.redirect(`/article/${articleId}`);
+				res.redirect(`/article/${articleId}`);		
 			}
-		});
+		}
 	}
 });
 
@@ -132,52 +127,46 @@ router.post('/', upload.array('album', 1), function(req, res) {
 	
 });
 
-router.get('/collect', function(req, res) {
+router.get('/collect', async (req, res) => {
 	const { articleId } = req.query;
 
 	if (!req.session.user) {
 		req.flash('error', PLEASE_LOGIN);
 		res.redirect('/login');
 	} else {
-		Article.findById(parseInt(articleId)).then(article => {
-			if (!article) {
-				req.flash('error', '文章不存在！');
-				res.redirect('/article');
-			} else {
-				User.findById(req.session.user.id).then(user => {
-					user.getArticles().then(collectedArticles => {
-						if (collectedArticles.length === 0) {
-							user.addArticle(article).then(() => {
-								req.session.user.collectedArticles.push(article.dataValues);
-								req.flash('info', '收藏成功');
-								res.redirect(`/article/${articleId}`);
-							});
-						}
-						collectedArticles.forEach((value, index) => {
-							if (value.dataValues.id === parseInt(articleId)) {
-								req.flash('error', '已收藏！');
-								res.redirect('/article');
-							}
-							if (index === collectedArticles.length-1) {
-								user.addArticle(article).then(() => {
-									req.session.user.collectedArticles.push(article.dataValues);
-									req.flash('info', '收藏成功');
-									res.redirect(`/article/${articleId}`);
-								});
-							}
-						});
-						
-					});
-				});
+		let article = await Article.findById(parseInt(articleId));
+		if (!article) {
+			req.flash('error', '文章不存在！');
+			res.redirect('/article');
+		} else {
+			let user = await User.findById(req.session.user.id)
+			let collectedArticles = await user.getArticles();
+			if (collectedArticles.length === 0) {
+				await user.addArticle(article)
+				req.session.user.collectedArticles.push(article.dataValues);
+				req.flash('info', '收藏成功');
+				res.redirect(`/article/${articleId}`);
 			}
-		});
+			collectedArticles.forEach(async (value, index) => {
+				if (value.dataValues.id === parseInt(articleId)) {
+					req.flash('error', '已收藏！');
+					res.redirect('/article');
+				}
+				if (index === collectedArticles.length-1) {
+					await user.addArticle(article);
+					req.session.user.collectedArticles.push(article.dataValues);
+					req.flash('info', '收藏成功');
+					res.redirect(`/article/${articleId}`);
+				}
+			});
+		}
 	}
 });
 
 /**
  * 获取文章详情
  */
-router.get('/:id', function(req, res) {
+router.get('/:id', async (req, res) => {
 	const { id } = req.params;
 
 	res.locals.collectDisabled = false;
@@ -190,55 +179,48 @@ router.get('/:id', function(req, res) {
 		});
 	}
 
-	Article.findById(parseInt(id)).then(article => {
-		if (!article) {
-			req.flash('error', '文章不存在！');
-			res.redirect('/article');
+	let article = await Article.findById(parseInt(id));
+	if (!article) {
+		req.flash('error', '文章不存在！');
+		res.redirect('/article');
+	} else {
+		let user = await User.findById(article.userId);
+		res.locals.poster = {};
+		if (!user) {
+			let articleComments = await article.getArticleComments();
+			res.locals.comments = [];
+			if (articleComments.length === 0) {
+				res.render('articleDetail', { article: article.dataValues });
+			} else{
+				console.log(article.intro);
+				articleComments.map(async (articleComment, index) => {
+					res.locals.comments[index] = articleComment.dataValues;
+					let user = await User.findById(articleComment.userId);
+					res.locals.comments[index].user = user.dataValues;
+					if (index === articleComments.length - 1) {
+						res.render('articleDetail', { article: article.dataValues });
+					}
+				});
+			}
 		} else {
-			User.findById(article.userId).then(user => {
-				res.locals.poster = {};
-				if (!user) {
-					article.getArticleComments().then(articleComments => {
-						res.locals.comments = [];
-						if (articleComments.length === 0) {
-							res.render('articleDetail', { article: article.dataValues });
-						} else{
-							console.log(article.intro);
-							articleComments.map((value, index) => {
-								res.locals.comments[index] = articleComments[index].dataValues;
-								User.findById(articleComments[index].userId).then(user => {
-									res.locals.comments[index].user = user.dataValues;
-									if (index === articleComments.length - 1) {
-										res.render('articleDetail', { article: article.dataValues });
-									}
-								});
-							});
-						}
-					});
-				} else {
-					res.locals.poster = user.dataValues;
-					article.getArticleComments().then(articleComments => {
-						res.locals.comments = [];
-						if (articleComments.length === 0) {
-							res.render('articleDetail', { article: article.dataValues });
-						} else{
-							console.log(article.intro);
-							articleComments.map((value, index) => {
-								res.locals.comments[index] = articleComments[index].dataValues;
-								User.findById(articleComments[index].userId).then(user => {
-									res.locals.comments[index].user = user.dataValues;
-									if (index === articleComments.length - 1) {
-										res.render('articleDetail', { article: article.dataValues });
-									}
-								});
-							});
-						}
-					});
-				}
-			});
+			res.locals.poster = user.dataValues;
+			let articleComments = await article.getArticleComments();
+			res.locals.comments = [];
+			if (articleComments.length === 0) {
+				res.render('articleDetail', { article: article.dataValues });
+			} else{
+				console.log(article.intro);
+				articleComments.map(async (articleComment, index) => {
+					res.locals.comments[index] = articleComment.dataValues;
+					let user = await User.findById(articleComment.userId);
+					res.locals.comments[index].user = user.dataValues;
+					if (index === articleComments.length - 1) {
+						res.render('articleDetail', { article: article.dataValues });
+					}
+				});
+			}
 		}
-	});
-
+	}
 });
 
 

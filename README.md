@@ -6,10 +6,6 @@
 
 ![首页](./docs/images/preview_home.png)
 
-## 在线浏览
-
-使用现代浏览器打开 [http://smallmenu.venusworld.cn:3000](http://smallmenu.venusworld.cn:3000) ，推荐使用 Chrome、Safari、IE9 及以上。
-
 ## Docker 部署
 ```bash
 docker-compose up

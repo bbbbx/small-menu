@@ -13,41 +13,40 @@ const upload = multer({
 	}
 });
 
-router.get('/', function(req, res) {
+router.get('/', async (req, res) => {
 	res.locals.users = [];
-	User.findAll().then(users => {
-		if (users.length === 0) {
-			res.render('chart');
-		} else {
-			users.map((value, index) => {
-				res.locals.users.push(users[index].dataValues);
-				users[index].getFollowers().then((followers) => {
-					res.locals.users[index].followers = followers.length;
-					users[index].getFollowing().then((following => {
-						res.locals.users[index].following = following.length;
-						if (index === users.length - 1) {
-							res.render('chart');
-						}
-					}));
-				});
-			});
-		}
-	});
+	let users = await User.findAll();
+
+	if (users.length === 0) {
+		res.render('chart');
+	} else {
+		users.map(async (user, index) => {
+			res.locals.users.push(user.dataValues);
+			let followers = await user.getFollowers();
+			let following = await user.getFollowing();
+
+			res.locals.users[index].followers = followers.length;
+			res.locals.users[index].following = following.length;
+
+			if (index === users.length - 1) {
+				res.render('chart');
+			}
+		});
+	}
 });
 
-router.get('/setting', function(req, res) {
+router.get('/setting', async (req, res) => {
 	if (!req.session.user) {
 		req.flash('error', PLEASE_LOGIN);
 		res.redirect('/');
 	} else {
-		User.findById(parseInt(req.session.user.id)).then(user => {
-			if (!user) {
-				req.flash('error', PLEASE_LOGIN);
-				res.redirect('/');
-			} else {
-				res.render('setting');
-			}
-		});
+		let user = await User.findById(parseInt(req.session.user.id))
+		if (!user) {
+			req.flash('error', PLEASE_LOGIN);
+			res.redirect('/');
+		} else {
+			res.render('setting');
+		}
 	}
 });
 
@@ -147,7 +146,7 @@ router.get('/0', function(req, res) {
 	}
 });
 
-router.get('/:id', function(req, res) {
+router.get('/:id', async (req, res) => {
 	const { id } = req.params;
 	res.locals.followingDisabled = false;
 
@@ -159,96 +158,85 @@ router.get('/:id', function(req, res) {
 		});
 	}
 
-	User.findById(id)
-		.then(user => {
-			if (!user) {
-				req.flash('error', '用户不存在！');
-				res.redirect('/user');
+	let user = await User.findById(id)
+	if (!user) {
+		req.flash('error', '用户不存在！');
+		res.redirect('/user');
+	} else {
+		res.locals.currentUser = user.dataValues;
+		res.locals.currentUser.following = [];
+		res.locals.currentUser.followers = [];
+		res.locals.currentUser.comments = [];
+		res.locals.currentUser.collections = [];
+		res.locals.currentUser.collectedArticles = [];
+		res.locals.currentUser.articles = [];
+		res.locals.currentUser.articleComments = [];
+
+		let menus = await user.getMenus()
+		menus.map((value, index) => {
+			res.locals.currentUser.collections.push(menus[index]);
+		});
+		res.locals.removeVisiable = false;
+
+		let followings = await user.getFollowing()
+		followings.map((value) => {
+			res.locals.currentUser.following.push(value);
+		});
+		let followers = await user.getFollowers()
+		followers.map((value) => {
+			res.locals.currentUser.followers.push(value);
+		});
+
+		let collectedArticles = await user.getArticles()
+		collectedArticles.map(value => {
+			res.locals.currentUser.collectedArticles.push(value.dataValues);
+		});
+		
+		let articles = await Article.findAll({
+							where: { userId: res.locals.currentUser.id}
+		});
+		articles.map(value => {
+			res.locals.currentUser.articles.push(value.dataValues);
+		});
+							
+		let articleComments = await user.getArticleComments();
+		if (articleComments.length === 0) {
+			let comments = await user.getComments();
+			if (comments.length === 0) {
+				res.render('user');
 			} else {
-				res.locals.currentUser = user.dataValues;
-				res.locals.currentUser.following = [];
-				res.locals.currentUser.followers = [];
-				res.locals.currentUser.comments = [];
-				res.locals.currentUser.collections = [];
-				res.locals.currentUser.collectedArticles = [];
-				res.locals.currentUser.articles = [];
-				res.locals.currentUser.articleComments = [];
-
-				user.getMenus().then(menus => {
-					menus.map((value, index) => {
-						res.locals.currentUser.collections.push(menus[index]);
-					});
-					res.locals.removeVisiable = false;
-					user.getFollowing().then(followings => {
-						followings.map((value) => {
-							res.locals.currentUser.following.push(value);
-						});
-						user.getFollowers().then(followers => {
-							followers.map((value) => {
-								res.locals.currentUser.followers.push(value);
-							});
-
-							user.getArticles().then(collectedArticles => {
-								collectedArticles.map(value => {
-									res.locals.currentUser.collectedArticles.push(value.dataValues);
-								});
-								Article.findAll({
-									where: { userId: res.locals.currentUser.id}
-								}).then(articles => {
-									articles.map(value => {
-										res.locals.currentUser.articles.push(value.dataValues);
-									});
-									user.getArticleComments().then(articleComments => {
-										if (articleComments.length === 0) {
-											user.getComments().then(comments => {
-												if (comments.length === 0) {
-													res.render('user');
-												} else {
-													comments.map((value, index) => {
-														res.locals.currentUser.comments[index] = comments[index].dataValues;
-														Menu.findById(comments[index].menuId).then(menu => {
-															res.locals.currentUser.comments[index].menu = menu.dataValues;
-															if (index === comments.length - 1) {
-																res.render('user');
-															}
-														});
-													});
-												}
-											});
-										} else {
-											articleComments.map((value, index) => {
-												res.locals.currentUser.articleComments.push(articleComments[index].dataValues);
-												Article.findById(articleComments[index].articleId).then(article => {
-													res.locals.currentUser.articleComments[index].article = article.dataValues;
-													if (index === articleComments.length - 1) {
-														user.getComments().then(comments => {
-															if (comments.length === 0) {
-																res.render('user');
-															} else {
-																comments.map((value, index) => {
-																	res.locals.currentUser.comments[index] = comments[index].dataValues;
-																	Menu.findById(comments[index].menuId).then(menu => {
-																		res.locals.currentUser.comments[index].menu = menu.dataValues;
-																		if (index === comments.length - 1) {
-																			res.render('user');
-																		}
-																	});
-																});
-															}
-														});
-													}
-												});
-											});
-										}
-									});
-								});
-							});
-
-						});
-					});
+				comments.map(async (comment, index) => {
+					res.locals.currentUser.comments[index] = comment.dataValues;
+					let menu = await Menu.findById(comment.menuId);
+					res.locals.currentUser.comments[index].menu = menu.dataValues;
+					if (index === comments.length - 1) {
+						res.render('user');
+					}
 				});
 			}
-		});
+		} else {
+			articleComments.map(async (articleComment, index) => {
+				res.locals.currentUser.articleComments.push(articleComment.dataValues);
+				let article = await Article.findById(articleComments[index].articleId)
+				res.locals.currentUser.articleComments[index].article = article.dataValues;
+				if (index === articleComments.length - 1) {
+					let comments = await user.getComments();
+					if (comments.length === 0) {
+						res.render('user');
+					} else {
+						comments.map(async (comment, index) => {
+							res.locals.currentUser.comments[index] = comment.dataValues;
+							let menu = await Menu.findById(comments[index].menuId)
+							res.locals.currentUser.comments[index].menu = menu.dataValues;
+							if (index === comments.length - 1) {
+								res.render('user');
+							}
+						});
+					}
+				}
+			});
+		}
+	}
 });
 
 module.exports = router;
